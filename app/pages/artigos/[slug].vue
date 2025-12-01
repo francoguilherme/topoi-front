@@ -39,7 +39,7 @@
 
       <div class="download" v-if="article.arquivo">
         <a :href="getStrapiMedia(article.arquivo.url)" target="_blank" class="btn-download">
-          Baixar PDF
+          Ver PDF
         </a>
       </div>
     </article>

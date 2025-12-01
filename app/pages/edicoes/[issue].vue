@@ -45,13 +45,28 @@
 
       <section class="articles-list">
         <h2>Artigos nesta edição</h2>
-        <div v-if="edition.artigos?.length">
-          <ArticleCard 
-            v-for="article in edition.artigos" 
-            :key="article.id" 
-            :article="article" 
-          />
+        
+        <div class="search-bar">
+          <input 
+            v-model="searchInput" 
+            type="text" 
+            placeholder="Buscar por título ou autor..."
+          >
         </div>
+
+        <div v-if="filteredArticles?.length">
+          <div v-for="(articles, secao) in articlesBySection" :key="secao" class="section-group">
+            <h3 class="section-title">
+              {{ secao === 'Tradução'? 'Traduções': secao+'s' }}
+            </h3>
+            <ArticleCard 
+              v-for="article in articles" 
+              :key="article.id" 
+              :article="article" 
+            />
+          </div>
+        </div>
+        <p v-else-if="searchQuery">Nenhum artigo encontrado para "{{ searchQuery }}".</p>
         <p v-else>Nenhum artigo encontrado nesta edição.</p>
       </section>
     </div>
@@ -62,6 +77,10 @@
 const route = useRoute()
 const { find } = useStrapi()
 const config = useRuntimeConfig()
+
+const searchInput = ref('')
+const searchQuery = ref('')
+let searchTimeout
 
 const getStrapiMedia = (url) => {
   if (url.startsWith('http')) return url
@@ -85,7 +104,7 @@ const { data, pending, error } = await useAsyncData(
         populate: ['arquivo']
       },
       artigos: {
-        populate: ['autores']
+        populate: ['autores', 'arquivo']
       }
     }
   })
@@ -96,6 +115,45 @@ const edition = computed(() => {
     return data.value.data[0]
   }
   return null
+})
+
+const filteredArticles = computed(() => {
+  if (!edition.value?.artigos) return []
+  
+  if (!searchQuery.value) return edition.value.artigos
+
+  const query = searchQuery.value.toLowerCase()
+  
+  return edition.value.artigos.filter(article => {
+    const titleMatch = article.titulo?.toLowerCase().includes(query)
+    const authorMatch = article.autores?.some(autor => 
+      autor.nome?.toLowerCase().includes(query)
+    )
+    
+    return titleMatch || authorMatch
+  })
+})
+
+const articlesBySection = computed(() => {
+  if (!filteredArticles.value?.length) return {}
+  
+  const grouped = {}
+  filteredArticles.value.forEach(article => {
+    const secao = article.secao || 'Outros'
+    if (!grouped[secao]) {
+      grouped[secao] = []
+    }
+    grouped[secao].push(article)
+  })
+  
+  return grouped
+})
+
+watch(searchInput, (newVal) => {
+  clearTimeout(searchTimeout)
+  searchTimeout = setTimeout(() => {
+    searchQuery.value = newVal
+  }, 500)
 })
 </script>
 
@@ -134,6 +192,30 @@ const edition = computed(() => {
   border-bottom: 2px solid var(--primary-color);
   padding-bottom: 0.5rem;
   margin-bottom: 1.5rem;
+}
+
+.search-bar {
+  margin-bottom: 1.5rem;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.section-group {
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  color: var(--secondary-color);
+  margin-bottom: 1rem;
+  padding-left: 1rem;
+  border-left: 4px solid var(--secondary-color);
 }
 
 @media (max-width: 768px) {
