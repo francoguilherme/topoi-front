@@ -1,6 +1,6 @@
 <template>
   <div class="articles-page container">
-    <h1>Artigos</h1>
+    <h1>Publicações</h1>
 
     <div class="filters-container">
       <div class="search-bar">
@@ -21,8 +21,8 @@
       </div>
     </div>
     
-    <div v-if="pending" class="loading">Carregando artigos...</div>
-    <div v-else-if="error" class="error">Erro ao carregar artigos: {{ error.message }}</div>
+    <div v-if="pending" class="loading">Carregando publicações...</div>
+    <div v-else-if="error" class="error">Erro ao carregar publicações: {{ error.message }}</div>
     
     <div v-else class="articles-list">
       <ArticleCard 
@@ -33,7 +33,7 @@
       />
       
       <div v-if="data?.data?.length === 0" class="no-results">
-        Nenhum artigo encontrado.
+        Nenhuma publicação encontrada.
       </div>
 
       <!-- Pagination -->

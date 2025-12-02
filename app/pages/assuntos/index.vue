@@ -9,7 +9,7 @@
       <ul>
         <li v-for="subject in data?.data" :key="subject.id">
           <!-- Linking to articles page with query param for filtering could be a nice touch -->
-          <NuxtLink :to="`/artigos?assunto=${subject.slug}`">
+          <NuxtLink :to="`/publicacoes?assunto=${subject.slug}`">
             {{ subject.nome }}
           </NuxtLink>
           <div class="description" v-if="subject.descricao">

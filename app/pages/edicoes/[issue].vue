@@ -44,7 +44,7 @@
       </header>
 
       <section class="articles-list">
-        <h2>Artigos nesta edição</h2>
+        <h2>Publicações nesta edição</h2>
         
         <div class="search-bar">
           <input 
@@ -66,8 +66,8 @@
             />
           </div>
         </div>
-        <p v-else-if="searchQuery">Nenhum artigo encontrado para "{{ searchQuery }}".</p>
-        <p v-else>Nenhum artigo encontrado nesta edição.</p>
+        <p v-else-if="searchQuery">Nenhuma publicação encontrado para "{{ searchQuery }}".</p>
+        <p v-else>Nenhuma publicação encontrada nesta edição.</p>
       </section>
     </div>
   </div>

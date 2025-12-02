@@ -27,14 +27,15 @@
       </section>
 
       <section class="author-articles">
-        <h2>Artigos Publicados</h2>
+        <h2>Publicações</h2>
         
-        <div v-if="pendingArticles" class="loading">Carregando artigos...</div>
+        <div v-if="pendingArticles" class="loading">Carregando publicações...</div>
         <div v-else-if="articlesData?.data?.length">
           <ArticleCard 
             v-for="article in articlesData.data" 
             :key="article.id" 
-            :article="article" 
+            :article="article"
+            :showEdition="true" 
           />
           
           <Pagination 
@@ -42,7 +43,7 @@
             :totalPages="articlesData?.meta?.pagination?.pageCount" 
           />
         </div>
-        <p v-else>Nenhum artigo encontrado.</p>
+        <p v-else>Nenhuma publicação encontrada.</p>
       </section>
     </div>
   </div>

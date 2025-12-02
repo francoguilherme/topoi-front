@@ -14,9 +14,9 @@
           <div class="info">
             <h2>nº {{ edition.numero }} / V. {{ edition.volume }}</h2>
             <p class="period">{{ edition.periodo }}</p>
-            <p class="date" v-if="edition.data_de_publicacao">
+            <!--<p class="date" v-if="edition.data_de_publicacao">
               {{ new Date(edition.data_de_publicacao).getFullYear() }}
-            </p>
+            </p>-->
           </div>
         </NuxtLink>
       </div>

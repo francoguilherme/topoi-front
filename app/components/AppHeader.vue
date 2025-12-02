@@ -1,8 +1,10 @@
 <template>
   <header class="app-header">
-    <div class="container header-content">
+    <div class="header-content">
       <div class="logo">
-        <NuxtLink to="/">Revista Topoi</NuxtLink>
+        <NuxtLink to="/">
+          <img src="/logo-topoi.png" alt="Revista Topoi" class="logo-img" />
+        </NuxtLink>
       </div>
       
       <button class="hamburger" @click="toggleMenu" :class="{ active: isMenuOpen }" aria-label="Menu">
@@ -15,7 +17,7 @@
         <ul>
           <li><NuxtLink to="/" @click="closeMenu">Home</NuxtLink></li>
           <li><NuxtLink to="/dossie" @click="closeMenu">Dossiê</NuxtLink></li>
-          <li><NuxtLink to="/artigos" @click="closeMenu">Artigos</NuxtLink></li>
+          <li><NuxtLink to="/publicacoes" @click="closeMenu">Publicações</NuxtLink></li>
           <li><NuxtLink to="/edicoes" @click="closeMenu">Edições</NuxtLink></li>
           <li><NuxtLink to="/autores" @click="closeMenu">Autores</NuxtLink></li>
           <li><NuxtLink to="/assuntos" @click="closeMenu">Assuntos</NuxtLink></li>
@@ -41,7 +43,6 @@ const closeMenu = () => {
 .app-header {
   background-color: #fff;
   border-bottom: 1px solid #eee;
-  padding: 1rem 0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   position: sticky;
   top: 0;
@@ -53,14 +54,19 @@ const closeMenu = () => {
   justify-content: space-between;
   align-items: center;
   position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
 }
 
 .logo a {
-  font-family: var(--font-sans);
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--primary-color);
-  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.logo-img {
+  height: 60px;
+  width: auto;
 }
 
 .hamburger {
