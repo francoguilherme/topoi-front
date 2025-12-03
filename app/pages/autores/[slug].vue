@@ -52,6 +52,7 @@
 <script setup>
 const route = useRoute()
 const { find } = useStrapi()
+const { locale } = useI18n()
 const config = useRuntimeConfig()
 
 const getStrapiMedia = (url) => {
@@ -65,11 +66,14 @@ const pageSize = 5
 const { data: authorData, pending: pendingAuthor, error: errorAuthor } = await useAsyncData(
   `autor-${route.params.slug}`, 
   () => find('autores', {
+    locale: locale.value,
     filters: {
       slug: route.params.slug
     },
     populate: ['foto']
-  })
+  }), {
+    watch: [locale]
+  }
 )
 
 const author = computed(() => {
@@ -82,6 +86,7 @@ const author = computed(() => {
 const { data: articlesData, pending: pendingArticles, error: errorArticles } = await useAsyncData(
   `autor-artigos-${route.params.slug}`,
   () => find('artigos', {
+    locale: locale.value,
     filters: {
       autores: {
         slug: route.params.slug
@@ -95,7 +100,7 @@ const { data: articlesData, pending: pendingArticles, error: errorArticles } = a
     }
   }),
   {
-    watch: [page]
+    watch: [page, locale]
   }
 )
 </script>

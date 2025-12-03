@@ -17,7 +17,7 @@
         <div class="authors" v-if="article.autores?.length">
           Por: 
           <span v-for="(autor, index) in article.autores" :key="autor.id">
-            <NuxtLink :to="`/autores/${autor.slug}`">{{ autor.nome }}</NuxtLink>
+            <NuxtLink :to="localePath(`/autores/${autor.slug}`)">{{ autor.nome }}</NuxtLink>
             <span v-if="index < article.autores.length - 1">, </span>
           </span>
         </div>
@@ -60,6 +60,8 @@
 <script setup>
 const route = useRoute()
 const { find } = useStrapi()
+const { locale } = useI18n()
+const localePath = useLocalePath()
 const config = useRuntimeConfig()
 
 // Helper to get full URL for media
@@ -71,11 +73,14 @@ const getStrapiMedia = (url) => {
 const { data, pending, error } = await useAsyncData(
   `artigo-${route.params.slug}`, 
   () => find('artigos', {
+    locale: locale.value,
     filters: {
       slug: route.params.slug
     },
     populate: ['autores', 'arquivo', 'palavras_chave', 'edicao']
-  })
+  }), {
+    watch: [locale]
+  }
 )
 
 const article = computed(() => {

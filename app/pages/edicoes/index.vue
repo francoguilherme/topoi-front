@@ -7,7 +7,7 @@
     
     <div v-else class="editions-grid">
       <div v-for="edition in data?.data" :key="edition.id" class="edition-card">
-        <NuxtLink :to="`/edicoes/${edition.numero}-${edition.volume}`">
+        <NuxtLink :to="localePath(`/edicoes/${edition.numero}-${edition.volume}`)">
           <div class="cover" v-if="edition.capa">
             <img :src="getStrapiMedia(edition.capa.url)" :alt="`Capa da edição ${edition.volume}`">
           </div>
@@ -26,6 +26,8 @@
 
 <script setup>
 const { find } = useStrapi()
+const { locale } = useI18n()
+const localePath = useLocalePath()
 const config = useRuntimeConfig()
 
 const getStrapiMedia = (url) => {
@@ -34,9 +36,12 @@ const getStrapiMedia = (url) => {
 }
 
 const { data, pending, error } = await useAsyncData('edicoes', () => find('edicoes', {
+  locale: locale.value,
   sort: ['data_de_publicacao:desc'],
   populate: ['capa']
-}))
+}), {
+  watch: [locale]
+})
 </script>
 
 <style scoped>

@@ -9,7 +9,7 @@
       <ul>
         <li v-for="subject in data?.data" :key="subject.id">
           <!-- Linking to articles page with query param for filtering could be a nice touch -->
-          <NuxtLink :to="`/publicacoes?assunto=${subject.slug}`">
+          <NuxtLink :to="localePath(`/publicacoes?assunto=${subject.slug}`)">
             {{ subject.nome }}
           </NuxtLink>
           <div class="description" v-if="subject.descricao">
@@ -23,13 +23,18 @@
 
 <script setup>
 const { find } = useStrapi()
+const { locale } = useI18n()
+const localePath = useLocalePath()
 
 const { data, pending, error } = await useAsyncData('assuntos', () => find('assuntos', {
+  locale: locale.value,
   sort: ['nome:asc'],
   pagination: {
     limit: 100
   }
-}))
+}), {
+  watch: [locale]
+})
 </script>
 
 <style scoped>

@@ -2,7 +2,7 @@
   <header class="app-header">
     <div class="header-content">
       <div class="logo">
-        <NuxtLink to="/">
+        <NuxtLink :to="localePath('/')">
           <img src="/logo-topoi.png" alt="Revista Topoi" class="logo-img" />
         </NuxtLink>
       </div>
@@ -15,12 +15,33 @@
       
       <nav :class="{ open: isMenuOpen }">
         <ul>
-          <li><NuxtLink to="/" @click="closeMenu">Home</NuxtLink></li>
-          <li><NuxtLink to="/dossie" @click="closeMenu">Dossiê</NuxtLink></li>
-          <li><NuxtLink to="/publicacoes" @click="closeMenu">Publicações</NuxtLink></li>
-          <li><NuxtLink to="/edicoes" @click="closeMenu">Edições</NuxtLink></li>
-          <li><NuxtLink to="/autores" @click="closeMenu">Autores</NuxtLink></li>
-          <li><NuxtLink to="/assuntos" @click="closeMenu">Assuntos</NuxtLink></li>
+          <li><NuxtLink :to="localePath('/')" @click="closeMenu">Home</NuxtLink></li>
+          <li><NuxtLink :to="localePath('/dossie')" @click="closeMenu">Dossiê</NuxtLink></li>
+          <li><NuxtLink :to="localePath('/publicacoes')" @click="closeMenu">Publicações</NuxtLink></li>
+          <li><NuxtLink :to="localePath('/edicoes')" @click="closeMenu">Edições</NuxtLink></li>
+          <li><NuxtLink :to="localePath('/autores')" @click="closeMenu">Autores</NuxtLink></li>
+          <li><NuxtLink :to="localePath('/assuntos')" @click="closeMenu">Assuntos</NuxtLink></li>
+          <li class="locale-selector-item">
+            <div class="locale-selector" ref="localeSelectorRef">
+              <button @click="toggleLocaleMenu" class="locale-btn">
+                <span class="flag" v-if="flags[currentLocale.code]">{{ flags[currentLocale.code] }}</span>
+                {{ currentLocale.name }}
+                <span class="arrow" :class="{ up: isLocaleMenuOpen }">▼</span>
+              </button>
+              <ul v-if="isLocaleMenuOpen" class="locale-menu">
+                <li v-for="loc in availableLocales" :key="loc.code">
+                  <NuxtLink 
+                    :to="switchLocalePath(loc.code)" 
+                    @click="closeLocaleMenu"
+                    :class="{ active: loc.code === locale }"
+                  >
+                    <span class="flag">{{ flags[loc.code] }}</span>
+                    {{ loc.name }}
+                  </NuxtLink>
+                </li>
+              </ul>
+            </div>
+          </li>
         </ul>
       </nav>
     </div>
@@ -29,6 +50,26 @@
 
 <script setup>
 const isMenuOpen = ref(false)
+const isLocaleMenuOpen = ref(false)
+const localeSelectorRef = ref(null)
+
+const { locale, locales } = useI18n()
+const switchLocalePath = useSwitchLocalePath()
+const localePath = useLocalePath()
+
+const availableLocales = computed(() => {
+  return locales.value
+})
+
+const currentLocale = computed(() => {
+  return locales.value.find(l => l.code === locale.value) || { name: locale.value }
+})
+
+const flags = {
+  'pt-BR': '🇧🇷',
+  'en': '🇺🇸',
+  'es': '🇪🇸'
+}
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value
@@ -37,6 +78,23 @@ const toggleMenu = () => {
 const closeMenu = () => {
   isMenuOpen.value = false
 }
+
+const toggleLocaleMenu = () => {
+  isLocaleMenuOpen.value = !isLocaleMenuOpen.value
+}
+
+const closeLocaleMenu = () => {
+  isLocaleMenuOpen.value = false
+}
+
+// Close dropdown when clicking outside
+onMounted(() => {
+  document.addEventListener('click', (event) => {
+    if (localeSelectorRef.value && !localeSelectorRef.value.contains(event.target)) {
+      isLocaleMenuOpen.value = false
+    }
+  })
+})
 </script>
 
 <style scoped>
@@ -119,6 +177,87 @@ nav a:hover, nav a.router-link-active {
   color: var(--secondary-color);
 }
 
+/* Locale Selector */
+.locale-selector-item {
+  display: flex;
+  align-items: center;
+}
+
+.locale-selector {
+  position: relative;
+}
+
+.locale-btn {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--text-color);
+}
+
+.locale-btn:hover {
+  border-color: var(--secondary-color);
+  color: var(--secondary-color);
+}
+
+.arrow {
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+}
+
+.arrow.up {
+  transform: rotate(180deg);
+}
+
+.locale-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  min-width: 150px;
+  margin-top: 0.5rem;
+  flex-direction: column;
+  gap: 0;
+  padding: 0.5rem 0;
+  z-index: 102;
+}
+
+.locale-menu li {
+  width: 100%;
+}
+
+.locale-menu a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: var(--text-color);
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.flag {
+  font-size: 1.2em;
+}
+
+.locale-menu a:hover {
+  background-color: #f5f5f5;
+  color: var(--secondary-color);
+}
+
+.locale-menu a.active {
+  font-weight: bold;
+  color: var(--primary-color);
+  background-color: #f9f9f9;
+}
+
 /* Mobile styles */
 @media (max-width: 768px) {
   .hamburger {
@@ -146,6 +285,28 @@ nav a:hover, nav a.router-link-active {
     flex-direction: column;
     gap: 0;
     padding: 1rem;
+  }
+
+  .locale-selector {
+    width: 100%;
+  }
+  
+  .locale-selector-item {
+    width: 100%;
+    padding: 0.5rem;
+  }
+  
+  .locale-btn {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .locale-menu {
+    position: static;
+    width: 100%;
+    box-shadow: none;
+    border: 1px solid #eee;
+    margin-top: 0.5rem;
   }
   
   nav li {

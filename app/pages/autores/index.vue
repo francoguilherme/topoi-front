@@ -16,7 +16,7 @@
     <div v-else class="authors-list">
       <ul>
         <li v-for="author in data?.data" :key="author.id">
-          <NuxtLink :to="`/autores/${author.slug}`">
+          <NuxtLink :to="localePath(`/autores/${author.slug}`)">
             {{ author.nome }}
           </NuxtLink>
           <span v-if="author.instituicao" class="institution">
@@ -41,10 +41,13 @@ const searchInput = ref('')
 let searchTimeout
 
 const { find } = useStrapi()
+const { locale } = useI18n()
+const localePath = useLocalePath()
 
 const { data, pending, error } = await useAsyncData(
   'autores', 
   () => find('autores', {
+    locale: locale.value,
     sort: ['nome:asc'],
     pagination: {
       page: page.value,
@@ -60,7 +63,7 @@ const { data, pending, error } = await useAsyncData(
     } : undefined
   }),
   {
-    watch: [page, search]
+    watch: [page, search, locale]
   }
 )
 

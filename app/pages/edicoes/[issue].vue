@@ -76,6 +76,7 @@
 <script setup>
 const route = useRoute()
 const { find } = useStrapi()
+const { locale } = useI18n()
 const config = useRuntimeConfig()
 
 const searchInput = ref('')
@@ -93,6 +94,7 @@ const [numero, volume] = route.params.issue.split('-').map(Number)
 const { data, pending, error } = await useAsyncData(
   `edicao-${route.params.issue}`, 
   () => find('edicoes', {
+    locale: locale.value,
     filters: {
       volume: volume,
       numero: numero
@@ -107,7 +109,9 @@ const { data, pending, error } = await useAsyncData(
         populate: ['autores', 'arquivo']
       }
     }
-  })
+  }), {
+    watch: [locale]
+  }
 )
 
 const edition = computed(() => {

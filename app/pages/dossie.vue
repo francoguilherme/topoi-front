@@ -11,10 +11,14 @@
 
 <script setup>
 const { find } = useStrapi()
+const { locale } = useI18n()
 
 const { data, pending, error } = await useAsyncData('dossie', () => find('dossie', {
+  locale: locale.value,
   populate: ['pagina']
-}))
+}), {
+  watch: [locale]
+})
 </script>
 
 <style scoped>

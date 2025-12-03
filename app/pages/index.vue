@@ -10,7 +10,7 @@
       <section v-if="featuredEdition" class="featured-edition">
         <div class="edition-header">
           <h2>Edição em Destaque</h2>
-          <NuxtLink :to="`/edicoes/${featuredEdition.numero}-${featuredEdition.volume}`" class="view-all">
+          <NuxtLink :to="localePath(`/edicoes/${featuredEdition.numero}-${featuredEdition.volume}`)" class="view-all">
             Ver Edição Completa →
           </NuxtLink>
         </div>
@@ -40,8 +40,11 @@
 
 <script setup>
 const { find } = useStrapi()
+const { locale } = useI18n()
+const localePath = useLocalePath()
 
 const { data, pending, error } = await useAsyncData('home', () => find('home', {
+  locale: locale.value,
   populate: {
     pagina: {
       populate: {
@@ -55,7 +58,9 @@ const { data, pending, error } = await useAsyncData('home', () => find('home', {
       }
     }
   }
-}))
+}), {
+  watch: [locale]
+})
 
 const featuredEdition = computed(() => data.value?.data?.pagina?.edicao)
 

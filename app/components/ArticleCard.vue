@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink :to="`/publicacoes/${article.slug}`" class="article-card">
+  <NuxtLink :to="localePath(`/publicacoes/${article.slug}`)" class="article-card">
     <h3>
       {{ article.titulo }}
     </h3>
@@ -64,6 +64,7 @@ const props = defineProps({
 
 const config = useRuntimeConfig()
 const router = useRouter()
+const localePath = useLocalePath()
 const isExpanded = ref(false)
 const isDownloading = ref(false)
 
@@ -78,7 +79,7 @@ const getStrapiMedia = (url) => {
 
 const navigateToEdition = () => {
   if (props.article.edicao) {
-    router.push(`/edicoes/${props.article.edicao.numero}-${props.article.edicao.volume}`)
+    router.push(localePath(`/edicoes/${props.article.edicao.numero}-${props.article.edicao.volume}`))
   }
 }
 

@@ -56,6 +56,7 @@ let searchTimeout
 const sections = ['Artigo', 'Resenha', 'Entrevista', 'Documento', 'Tradução']
 
 const { find } = useStrapi()
+const { locale } = useI18n()
 
 const { data, pending, error } = await useAsyncData(
   'artigos', 
@@ -74,6 +75,7 @@ const { data, pending, error } = await useAsyncData(
     }
 
     return find('artigos', {
+      locale: locale.value,
       populate: ['autores', 'edicao', 'arquivo'],
       sort: ['data_de_publicacao:desc'],
       pagination: {
@@ -84,7 +86,7 @@ const { data, pending, error } = await useAsyncData(
     })
   },
   {
-    watch: [page, search, selectedSection]
+    watch: [page, search, selectedSection, locale]
   }
 )
 
