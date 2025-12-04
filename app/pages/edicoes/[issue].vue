@@ -1,20 +1,20 @@
 <template>
   <div class="edition-detail container">
-    <div v-if="pending" class="loading">Carregando edição...</div>
+    <div v-if="pending" class="loading">{{ $t('editions.detail.loading') }}</div>
     <div v-else-if="error || !edition" class="error">
-      {{ error ? 'Erro ao carregar edição: ' + error.message : 'Edição não encontrada.' }}
+      {{ error ? $t('editions.detail.error_loading', { message: error.message }) : $t('editions.detail.not_found') }}
     </div>
     
     <div v-else class="content">
       <header class="edition-header">
         <div class="cover-wrapper" v-if="edition.capa">
-          <img :src="getStrapiMedia(edition.capa.url)" :alt="`Capa da edição`">
+          <img :src="getStrapiMedia(edition.capa.url)" :alt="$t('editions.detail.cover_alt')">
         </div>
         <div class="edition-info">
           <h1>nº {{ edition.numero }} / V. {{ edition.volume }}</h1>
           <p class="period">{{ edition.periodo }}</p>
           <p class="date" v-if="edition.data_de_publicacao">
-            Publicado em: {{ new Date(edition.data_de_publicacao).toLocaleDateString('pt-BR') }}
+            {{ $t('editions.detail.published_at', { date: new Date(edition.data_de_publicacao).toLocaleDateString(locale === 'en' ? 'en-US' : locale === 'es' ? 'es-ES' : 'pt-BR') }) }}
           </p>
           <div v-if="edition.titulo" class="edition-title">
             <h2>{{ edition.titulo }}</h2>
@@ -23,18 +23,18 @@
           
           <div v-if="edition.apresentacao" class="presentation-link">
             <a :href="getStrapiMedia(edition.apresentacao.url)" target="_blank" class="btn-download">
-              Apresentação
+              {{ $t('editions.detail.presentation') }}
             </a>
           </div>
 
           <div class="editorial" v-if="edition.editorial">
             <div v-if="edition.editorial.arquivo" class="editorial-file">
               <a :href="getStrapiMedia(edition.editorial.arquivo.url)" target="_blank" class="btn-download">
-                Editorial: {{ edition.editorial.titulo}}
+                {{ $t('editions.detail.editorial', { title: edition.editorial.titulo }) }}
               </a>
             </div>
             <div v-else>
-              <h3>Editorial: {{ edition.editorial.titulo}}</h3>
+              <h3>{{ $t('editions.detail.editorial', { title: edition.editorial.titulo }) }}</h3>
               <div class="editorial-content" v-if="edition.editorial.texto">
                 <BlocksRenderer :content="edition.editorial.texto" />
               </div>
@@ -44,20 +44,20 @@
       </header>
 
       <section class="articles-list">
-        <h2>Publicações nesta edição</h2>
+        <h2>{{ $t('editions.detail.publications_in_issue') }}</h2>
         
         <div class="search-bar">
           <input 
             v-model="searchInput" 
             type="text" 
-            placeholder="Buscar por título ou autor..."
+            :placeholder="$t('editions.detail.search_placeholder')"
           >
         </div>
 
         <div v-if="filteredArticles?.length">
           <div v-for="(articles, secao) in articlesBySection" :key="secao" class="section-group">
             <h3 class="section-title">
-              {{ secao === 'Tradução'? 'Traduções': secao+'s' }}
+              {{ secao }}
             </h3>
             <ArticleCard 
               v-for="article in articles" 
@@ -66,8 +66,8 @@
             />
           </div>
         </div>
-        <p v-else-if="searchQuery">Nenhuma publicação encontrado para "{{ searchQuery }}".</p>
-        <p v-else>Nenhuma publicação encontrada nesta edição.</p>
+        <p v-else-if="searchQuery">{{ $t('editions.detail.no_results_query', { query: searchQuery }) }}</p>
+        <p v-else>{{ $t('editions.detail.no_results') }}</p>
       </section>
     </div>
   </div>
@@ -76,7 +76,7 @@
 <script setup>
 const route = useRoute()
 const { find } = useStrapi()
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const config = useRuntimeConfig()
 
 const searchInput = ref('')
@@ -143,7 +143,7 @@ const articlesBySection = computed(() => {
   
   const grouped = {}
   filteredArticles.value.forEach(article => {
-    const secao = article.secao || 'Outros'
+    const secao = $t(`common.sections.${article.secao}`)
     if (!grouped[secao]) {
       grouped[secao] = []
     }

@@ -1,0 +1,107 @@
+{
+    "common": {
+        "loading": "Cargando...",
+        "error_loading": "Error al cargar datos: {message}",
+        "read_more": "Leer más",
+        "download": "Descargar",
+        "more": "más",
+        "by": "Por:",
+        "and": "y"
+    },
+    "home": {
+        "featured_edition": "Edición Destacada",
+        "view_full_edition": "Ver Edición Completa →",
+        "translations": "Traducciones",
+        "others": "Otros"
+    },
+    "nav": {
+        "home": "Inicio",
+        "dossier": "Dossier",
+        "publications": "Publicaciones",
+        "editions": "Ediciones",
+        "authors": "Autores",
+        "subjects": "Temas",
+        "about": "Sobre",
+        "search": "Buscar",
+        "menu": "Menú"
+    },
+    "footer": {
+        "title": "Revista Topoi",
+        "subtitle": "Publicación de acceso abierto del Programa de Posgrado en Historia Social de la Universidad Federal de Río de Janeiro",
+        "rights": "Todos los derechos reservados."
+    },
+    "pagination": {
+        "previous": "Anterior",
+        "next": "Siguiente",
+        "page_of": "Página {current} de {total}"
+    },
+    "publications": {
+        "title": "Publicaciones",
+        "search_placeholder": "Buscar por título o autor...",
+        "all_sections": "Todas las secciones",
+        "loading": "Cargando publicaciones...",
+        "error_loading": "Error al cargar publicaciones: {message}",
+        "no_results": "No se encontraron publicaciones.",
+        "sections": {
+            "Artigo": "Artículo",
+            "Resenha": "Reseña",
+            "Entrevista": "Entrevista",
+            "Documento": "Documento",
+            "Tradução": "Traducción"
+        },
+        "detail": {
+            "loading": "Cargando publicación...",
+            "error_loading": "Error al cargar publicación: {message}",
+            "not_found": "Publicación no encontrada.",
+            "abstract": "Resumen",
+            "keywords": "Palabras clave:",
+            "view_pdf": "Ver PDF",
+            "how_to_cite": "Cómo citar este artículo",
+            "copy_citation": "Copiar cita",
+            "copied": "¡Copiado!",
+            "copy": "Copiar"
+        }
+    },
+    "editions": {
+        "title": "Ediciones",
+        "loading": "Cargando ediciones...",
+        "error_loading": "Error al cargar ediciones: {message}",
+        "cover_alt": "Portada de la edición {volume}",
+        "detail": {
+            "loading": "Cargando edición...",
+            "error_loading": "Error al cargar edición: {message}",
+            "not_found": "Edición no encontrada.",
+            "cover_alt": "Portada de la edición",
+            "published_at": "Publicado en: {date}",
+            "presentation": "Presentación",
+            "editorial": "Editorial: {title}",
+            "publications_in_issue": "Publicaciones en esta edición",
+            "search_placeholder": "Buscar por título o autor...",
+            "no_results_query": "No se encontraron publicaciones para \"{query}\".",
+            "no_results": "No se encontraron publicaciones en esta edición."
+        }
+    },
+    "authors": {
+        "title": "Autores",
+        "search_placeholder": "Buscar por nombre, institución, email o ORCID...",
+        "loading": "Cargando autores...",
+        "error_loading": "Error al cargar autores: {message}",
+        "detail": {
+            "loading": "Cargando autor...",
+            "error_loading": "Error al cargar autor: {message}",
+            "not_found": "Autor no encontrado.",
+            "biography": "Biografía",
+            "publications": "Publicaciones",
+            "loading_publications": "Cargando publicaciones...",
+            "no_publications": "No se encontraron publicaciones."
+        }
+    },
+    "subjects": {
+        "title": "Temas",
+        "loading": "Cargando temas...",
+        "error_loading": "Error al cargar temas: {message}"
+    },
+    "dossier": {
+        "default_title": "Dossier"
+    }
+}

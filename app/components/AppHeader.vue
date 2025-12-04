@@ -7,7 +7,7 @@
         </NuxtLink>
       </div>
       
-      <button class="hamburger" @click="toggleMenu" :class="{ active: isMenuOpen }" aria-label="Menu">
+      <button class="hamburger" @click="toggleMenu" :class="{ active: isMenuOpen }" :aria-label="$t('nav.menu')">
         <span></span>
         <span></span>
         <span></span>
@@ -15,12 +15,12 @@
       
       <nav :class="{ open: isMenuOpen }">
         <ul>
-          <li><NuxtLink :to="localePath('/')" @click="closeMenu">Home</NuxtLink></li>
-          <li><NuxtLink :to="localePath('/dossie')" @click="closeMenu">Dossiê</NuxtLink></li>
-          <li><NuxtLink :to="localePath('/publicacoes')" @click="closeMenu">Publicações</NuxtLink></li>
-          <li><NuxtLink :to="localePath('/edicoes')" @click="closeMenu">Edições</NuxtLink></li>
-          <li><NuxtLink :to="localePath('/autores')" @click="closeMenu">Autores</NuxtLink></li>
-          <li><NuxtLink :to="localePath('/assuntos')" @click="closeMenu">Assuntos</NuxtLink></li>
+          <li><NuxtLink :to="localePath('/')" @click="closeMenu">{{ $t('nav.home') }}</NuxtLink></li>
+          <li><NuxtLink :to="localePath('/dossie')" @click="closeMenu">{{ $t('nav.dossier') }}</NuxtLink></li>
+          <li><NuxtLink :to="localePath('/publicacoes')" @click="closeMenu">{{ $t('nav.publications') }}</NuxtLink></li>
+          <li><NuxtLink :to="localePath('/edicoes')" @click="closeMenu">{{ $t('nav.editions') }}</NuxtLink></li>
+          <li><NuxtLink :to="localePath('/autores')" @click="closeMenu">{{ $t('nav.authors') }}</NuxtLink></li>
+          <li><NuxtLink :to="localePath('/assuntos')" @click="closeMenu">{{ $t('nav.subjects') }}</NuxtLink></li>
           <li class="locale-selector-item">
             <div class="locale-selector" ref="localeSelectorRef">
               <button @click="toggleLocaleMenu" class="locale-btn">

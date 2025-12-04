@@ -1,9 +1,9 @@
 <template>
   <div class="dossie-page container">
-    <div v-if="pending" class="loading">Carregando...</div>
-    <div v-else-if="error" class="error">Erro ao carregar dados: {{ error.message }}</div>
+    <div v-if="pending" class="loading">{{ $t('common.loading') }}</div>
+    <div v-else-if="error" class="error">{{ $t('common.error_loading', { message: error.message }) }}</div>
     <div v-else class="content">
-      <h1>{{ data?.data?.displayName || 'Dossiê' }}</h1>
+      <h1>{{ data?.data?.displayName || $t('dossier.default_title') }}</h1>
       <BlocksRenderer v-if="data?.data?.pagina?.conteudo" :content="data.data.pagina.conteudo" />
     </div>
   </div>

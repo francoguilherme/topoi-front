@@ -1,9 +1,9 @@
 <template>
   <footer class="app-footer">
     <div class="container">
-      <p class="title">Revista Topoi</p>
-      <p class="subtitle">Publicação de acesso aberto do Programa de Pós-graduação em História Social da Universidade Federal do Rio de Janeiro</p>
-      <!--<p class="copyright">&copy; {{ new Date().getFullYear() }} Todos os direitos reservados.</p>-->
+      <p class="title">{{ $t('footer.title') }}</p>
+      <p class="subtitle">{{ $t('footer.subtitle') }}</p>
+      <!--<p class="copyright">&copy; {{ new Date().getFullYear() }} {{ $t('footer.rights') }}</p>-->
     </div>
   </footer>
 </template>

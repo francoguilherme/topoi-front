@@ -4,10 +4,12 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/strapi', '@nuxtjs/i18n'],
   i18n: {
+    lazy: true,
+    langDir: 'locales',
     locales: [
-      { code: 'pt-BR', iso: 'pt-BR', name: 'Português' },
-      { code: 'en', iso: 'en-US', name: 'English' },
-      { code: 'es', iso: 'es-ES', name: 'Español' }
+      { code: 'pt-BR', iso: 'pt-BR', name: 'Português', file: 'pt-BR.json' },
+      { code: 'en', iso: 'en-US', name: 'English', file: 'en.json' },
+      { code: 'es', iso: 'es-ES', name: 'Español', file: 'es.json' }
     ],
     defaultLocale: 'pt-BR',
     strategy: 'prefix_except_default',

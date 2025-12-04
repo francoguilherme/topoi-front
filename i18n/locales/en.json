@@ -1,0 +1,114 @@
+{
+    "common": {
+        "loading": "Loading...",
+        "error_loading": "Error loading data: {message}",
+        "read_more": "Read more",
+        "download": "Download",
+        "more": "more",
+        "by": "By:",
+        "and": "and",
+        "sections": {
+            "Artigo": "Articles",
+            "Resenha": "Reviews",
+            "Entrevista": "Interviews",
+            "Documento": "Documents",
+            "Tradução": "Translations"
+        }
+    },
+    "home": {
+        "featured_edition": "Featured Issue",
+        "view_full_edition": "View Full Issue →",
+        "translations": "Translations",
+        "others": "Others"
+    },
+    "nav": {
+        "home": "Home",
+        "dossier": "Dossier",
+        "publications": "Publications",
+        "editions": "Issues",
+        "authors": "Authors",
+        "subjects": "Subjects",
+        "about": "About",
+        "search": "Search",
+        "menu": "Menu"
+    },
+    "footer": {
+        "title": "Revista Topoi",
+        "subtitle": "Open access publication of the Social History Graduate Program at the Federal University of Rio de Janeiro",
+        "rights": "All rights reserved."
+    },
+    "pagination": {
+        "previous": "Previous",
+        "next": "Next",
+        "page_of": "Page {current} of {total}"
+    },
+    "publications": {
+        "title": "Publications",
+        "search_placeholder": "Search by title or author...",
+        "all_sections": "All sections",
+        "loading": "Loading publications...",
+        "error_loading": "Error loading publications: {message}",
+        "no_results": "No publications found.",
+        "sections": {
+            "Artigo": "Article",
+            "Resenha": "Review",
+            "Entrevista": "Interview",
+            "Documento": "Document",
+            "Tradução": "Translation"
+        },
+        "detail": {
+            "loading": "Loading publication...",
+            "error_loading": "Error loading publication: {message}",
+            "not_found": "Publication not found.",
+            "abstract": "Abstract",
+            "keywords": "Keywords:",
+            "view_pdf": "View PDF",
+            "how_to_cite": "How to cite this article",
+            "copy_citation": "Copy citation",
+            "copied": "Copied!",
+            "copy": "Copy"
+        }
+    },
+    "editions": {
+        "title": "Issues",
+        "loading": "Loading issues...",
+        "error_loading": "Error loading issues: {message}",
+        "cover_alt": "Issue cover {volume}",
+        "detail": {
+            "loading": "Loading issue...",
+            "error_loading": "Error loading issue: {message}",
+            "not_found": "Issue not found.",
+            "cover_alt": "Issue cover",
+            "published_at": "Published at: {date}",
+            "presentation": "Presentation",
+            "editorial": "Editorial: {title}",
+            "publications_in_issue": "Publications in this issue",
+            "search_placeholder": "Search by title or author...",
+            "no_results_query": "No publications found for \"{query}\".",
+            "no_results": "No publications found in this issue."
+        }
+    },
+    "authors": {
+        "title": "Authors",
+        "search_placeholder": "Search by name, institution, email or ORCID...",
+        "loading": "Loading authors...",
+        "error_loading": "Error loading authors: {message}",
+        "detail": {
+            "loading": "Loading author...",
+            "error_loading": "Error loading author: {message}",
+            "not_found": "Author not found.",
+            "biography": "Biography",
+            "publications": "Publications",
+            "loading_publications": "Loading publications...",
+            "no_publications": "No publications found."
+        }
+    },
+    "subjects": {
+        "title": "Subjects",
+        "loading": "Loading subjects...",
+        "error_loading": "Error loading subjects: {message}"
+    },
+    "dossier": {
+        "default_title": "Dossier"
+    }
+}

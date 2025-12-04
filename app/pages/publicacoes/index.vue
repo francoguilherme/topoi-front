@@ -1,28 +1,28 @@
 <template>
   <div class="articles-page container">
-    <h1>Publicações</h1>
+    <h1>{{ $t('publications.title') }}</h1>
 
     <div class="filters-container">
       <div class="search-bar">
         <input 
           v-model="searchInput" 
           type="text" 
-          placeholder="Buscar por título ou autor..."
+          :placeholder="$t('publications.search_placeholder')"
         >
       </div>
       
       <div class="section-filter">
         <select v-model="selectedSection">
-          <option value="">Todas as seções</option>
+          <option value="">{{ $t('publications.all_sections') }}</option>
           <option v-for="section in sections" :key="section" :value="section">
-            {{ section }}
+            {{ $t(`publications.sections.${section}`) }}
           </option>
         </select>
       </div>
     </div>
     
-    <div v-if="pending" class="loading">Carregando publicações...</div>
-    <div v-else-if="error" class="error">Erro ao carregar publicações: {{ error.message }}</div>
+    <div v-if="pending" class="loading">{{ $t('publications.loading') }}</div>
+    <div v-else-if="error" class="error">{{ $t('publications.error_loading', { message: error.message }) }}</div>
     
     <div v-else class="articles-list">
       <ArticleCard 
@@ -33,7 +33,7 @@
       />
       
       <div v-if="data?.data?.length === 0" class="no-results">
-        Nenhuma publicação encontrada.
+        {{ $t('publications.no_results') }}
       </div>
 
       <!-- Pagination -->

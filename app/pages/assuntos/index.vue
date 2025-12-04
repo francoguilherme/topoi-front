@@ -1,9 +1,9 @@
 <template>
   <div class="subjects-page container">
-    <h1>Assuntos</h1>
+    <h1>{{ $t('subjects.title') }}</h1>
     
-    <div v-if="pending" class="loading">Carregando assuntos...</div>
-    <div v-else-if="error" class="error">Erro ao carregar assuntos: {{ error.message }}</div>
+    <div v-if="pending" class="loading">{{ $t('subjects.loading') }}</div>
+    <div v-else-if="error" class="error">{{ $t('subjects.error_loading', { message: error.message }) }}</div>
     
     <div v-else class="subjects-list">
       <ul>

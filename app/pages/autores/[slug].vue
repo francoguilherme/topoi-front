@@ -1,8 +1,8 @@
 <template>
   <div class="author-detail container">
-    <div v-if="pendingAuthor" class="loading">Carregando autor...</div>
+    <div v-if="pendingAuthor" class="loading">{{ $t('authors.detail.loading') }}</div>
     <div v-else-if="errorAuthor || !author" class="error">
-      {{ errorAuthor ? 'Erro ao carregar autor: ' + errorAuthor.message : 'Autor não encontrado.' }}
+      {{ errorAuthor ? $t('authors.detail.error_loading', { message: errorAuthor.message }) : $t('authors.detail.not_found') }}
     </div>
     
     <div v-else class="content">
@@ -22,14 +22,14 @@
       </header>
 
       <section class="bio" v-if="author.biografia">
-        <h2>Biografia</h2>
+        <h2>{{ $t('authors.detail.biography') }}</h2>
         <BlocksRenderer :content="author.biografia" />
       </section>
 
       <section class="author-articles">
-        <h2>Publicações</h2>
+        <h2>{{ $t('authors.detail.publications') }}</h2>
         
-        <div v-if="pendingArticles" class="loading">Carregando publicações...</div>
+        <div v-if="pendingArticles" class="loading">{{ $t('authors.detail.loading_publications') }}</div>
         <div v-else-if="articlesData?.data?.length">
           <ArticleCard 
             v-for="article in articlesData.data" 
@@ -43,7 +43,7 @@
             :totalPages="articlesData?.meta?.pagination?.pageCount" 
           />
         </div>
-        <p v-else>Nenhuma publicação encontrada.</p>
+        <p v-else>{{ $t('authors.detail.no_publications') }}</p>
       </section>
     </div>
   </div>
@@ -92,7 +92,7 @@ const { data: articlesData, pending: pendingArticles, error: errorArticles } = a
         slug: route.params.slug
       }
     },
-    populate: ['autores'],
+    populate: ['autores', 'edicao', 'arquivo'],
     sort: ['data_de_publicacao:desc'],
     pagination: {
       page: page.value,

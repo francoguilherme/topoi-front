@@ -1,7 +1,7 @@
 <template>
   <div class="home-page container">
-    <div v-if="pending" class="loading">Carregando...</div>
-    <div v-else-if="error" class="error">Erro ao carregar dados: {{ error.message }}</div>
+    <div v-if="pending" class="loading">{{ $t('common.loading') }}</div>
+    <div v-else-if="error" class="error">{{ $t('common.error_loading', { message: error.message }) }}</div>
     <div v-else class="content">
       <!--<h1>{{ data?.data?.displayName || 'Revista Topoi' }}</h1>-->
       <BlocksRenderer v-if="data?.data?.pagina?.conteudo" :content="data.data.pagina.conteudo" />
@@ -9,9 +9,9 @@
       <!-- Featured Edition -->
       <section v-if="featuredEdition" class="featured-edition">
         <div class="edition-header">
-          <h2>Edição em Destaque</h2>
+          <h2>{{ $t('home.featured_edition') }}</h2>
           <NuxtLink :to="localePath(`/edicoes/${featuredEdition.numero}-${featuredEdition.volume}`)" class="view-all">
-            Ver Edição Completa →
+            {{ $t('home.view_full_edition') }}
           </NuxtLink>
         </div>
         
@@ -23,7 +23,7 @@
         <!-- Articles grouped by section -->
         <div v-for="(articles, secao) in articlesBySection" :key="secao" class="section-group">
           <h4 class="section-title">
-            {{ secao === 'Tradução'? 'Traduções': secao+'s' }}
+            {{ secao }}
           </h4>
           <div class="articles-list">
             <ArticleCard 
@@ -51,7 +51,7 @@ const { data, pending, error } = await useAsyncData('home', () => find('home', {
         edicao: {
           populate: {
             artigos: {
-              populate: ['autores']
+              populate: ['autores', 'arquivo']
             }
           }
         }
@@ -71,7 +71,7 @@ const articlesBySection = computed(() => {
   // Group articles by section (secao)
   const grouped = {}
   articles.forEach(article => {
-    const secao = article.secao || 'Outros'
+    const secao = $t(`common.sections.${article.secao}`)
     if (!grouped[secao]) {
       grouped[secao] = []
     }

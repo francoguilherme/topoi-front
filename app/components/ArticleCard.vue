@@ -4,7 +4,7 @@
       {{ article.titulo }}
     </h3>
     <div class="meta">
-      <span v-if="article.secao" class="section">{{ article.secao }}</span>
+      <span v-if="article.secao" class="section">{{ $t(`publications.sections.${article.secao}`) }}</span>
       <span 
         v-if="showEdition && article.edicao" 
         class="edition clickable"
@@ -13,7 +13,7 @@
         nº {{ article.edicao.numero }} / V. {{ article.edicao.volume }}
       </span>
       <span v-if="article.data_de_publicacao" class="date">
-        {{ new Date(article.data_de_publicacao).toLocaleDateString('pt-BR') }}
+        {{ new Date(article.data_de_publicacao).toLocaleDateString(locale === 'en' ? 'en-US' : locale === 'es' ? 'es-ES' : 'pt-BR') }}
       </span>
       <a 
         v-if="article.arquivo" 
@@ -21,13 +21,13 @@
         class="download-link"
         @click.prevent.stop="handleDownload"
       >
-        Baixar
+        {{ $t('common.download') }}
       </a>
     </div>
     <div class="authors" v-if="article.autores?.length">
-      Por: 
+      {{ $t('common.by') }} 
       <span v-for="(autor, index) in article.autores" :key="autor.id">
-        <span v-if="index > 0 && index === article.autores.length - 1">e </span>
+        <span v-if="index > 0 && index === article.autores.length - 1">{{ $t('common.and') }} </span>
         {{ autor.nome }} ({{ autor.instituicao }})<span v-if="index < article.autores.length - 1">; </span>
       </span>
     </div>
@@ -41,7 +41,7 @@
         <BlocksRenderer :content="article.resumo" />
       </div>
       <span v-if="!isExpanded" class="more-indicator">
-        mais 
+        {{ $t('common.more') }} 
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
@@ -64,6 +64,7 @@ const props = defineProps({
 
 const config = useRuntimeConfig()
 const router = useRouter()
+const { locale } = useI18n()
 const localePath = useLocalePath()
 const isExpanded = ref(false)
 const isDownloading = ref(false)

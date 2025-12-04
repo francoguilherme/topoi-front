@@ -1,15 +1,15 @@
 <template>
   <div class="editions-page container">
-    <h1>Edições</h1>
+    <h1>{{ $t('editions.title') }}</h1>
     
-    <div v-if="pending" class="loading">Carregando edições...</div>
-    <div v-else-if="error" class="error">Erro ao carregar edições: {{ error.message }}</div>
+    <div v-if="pending" class="loading">{{ $t('editions.loading') }}</div>
+    <div v-else-if="error" class="error">{{ $t('editions.error_loading', { message: error.message }) }}</div>
     
     <div v-else class="editions-grid">
       <div v-for="edition in data?.data" :key="edition.id" class="edition-card">
         <NuxtLink :to="localePath(`/edicoes/${edition.numero}-${edition.volume}`)">
           <div class="cover" v-if="edition.capa">
-            <img :src="getStrapiMedia(edition.capa.url)" :alt="`Capa da edição ${edition.volume}`">
+            <img :src="getStrapiMedia(edition.capa.url)" :alt="$t('editions.cover_alt', { volume: edition.volume })">
           </div>
           <div class="info">
             <h2>nº {{ edition.numero }} / V. {{ edition.volume }}</h2>

@@ -4,14 +4,14 @@
       :disabled="modelValue === 1" 
       @click="$emit('update:modelValue', modelValue - 1)"
     >
-      Anterior
+      {{ $t('pagination.previous') }}
     </button>
-    <span>Página {{ modelValue }} de {{ totalPages }}</span>
+    <span>{{ $t('pagination.page_of', { current: modelValue, total: totalPages }) }}</span>
     <button 
       :disabled="modelValue === totalPages" 
       @click="$emit('update:modelValue', modelValue + 1)"
     >
-      Próxima
+      {{ $t('pagination.next') }}
     </button>
   </div>
 </template>

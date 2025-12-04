@@ -1,21 +1,21 @@
 <template>
   <div class="article-detail container">
-    <div v-if="pending" class="loading">Carregando publicação...</div>
+    <div v-if="pending" class="loading">{{ $t('publications.detail.loading') }}</div>
     <div v-else-if="error || !article" class="error">
-      {{ error ? 'Erro ao carregar publicação: ' + error.message : 'Publicação não encontrada.' }}
+      {{ error ? $t('publications.detail.error_loading', { message: error.message }) : $t('publications.detail.not_found') }}
     </div>
     
     <article v-else class="content">
       <header class="article-header">
         <h1>{{ article.titulo }}</h1>
         <div class="meta">
-          <span v-if="article.secao" class="section">{{ article.secao }}</span>
+          <span v-if="article.secao" class="section">{{ $t(`publications.sections.${article.secao}`) }}</span>
           <span v-if="article.data_de_publicacao" class="date">
-            {{ new Date(article.data_de_publicacao).toLocaleDateString('pt-BR') }}
+            {{ new Date(article.data_de_publicacao).toLocaleDateString(locale === 'en' ? 'en-US' : locale === 'es' ? 'es-ES' : 'pt-BR') }}
           </span>
         </div>
         <div class="authors" v-if="article.autores?.length">
-          Por: 
+          {{ $t('common.by') }} 
           <span v-for="(autor, index) in article.autores" :key="autor.id">
             <NuxtLink :to="localePath(`/autores/${autor.slug}`)">{{ autor.nome }}</NuxtLink>
             <span v-if="index < article.autores.length - 1">, </span>
@@ -24,12 +24,12 @@
       </header>
 
       <div class="abstract" v-if="article.resumo">
-        <h2>Resumo</h2>
+        <h2>{{ $t('publications.detail.abstract') }}</h2>
         <BlocksRenderer :content="article.resumo" />
       </div>
 
       <div class="keywords" v-if="article.palavras_chave?.length">
-        <h3>Palavras-chave:</h3>
+        <h3>{{ $t('publications.detail.keywords') }}</h3>
         <ul>
           <li v-for="kw in article.palavras_chave" :key="kw.id">
             {{ kw.texto }} <!-- Assuming 'texto' is the field in 'simples.texto' component -->
@@ -39,17 +39,17 @@
 
       <div class="download" v-if="article.arquivo">
         <a :href="getStrapiMedia(article.arquivo.url)" target="_blank" class="btn-download">
-          Ver PDF
+          {{ $t('publications.detail.view_pdf') }}
         </a>
       </div>
 
       <div class="citation-box" v-if="citation">
-        <h3>Como citar este artigo</h3>
+        <h3>{{ $t('publications.detail.how_to_cite') }}</h3>
         <div class="citation-content">
           <p v-html="citation"></p>
-          <button @click="copyCitation" class="btn-copy" title="Copiar citação">
-            <span v-if="copied">Copiado!</span>
-            <span v-else>Copiar</span>
+          <button @click="copyCitation" class="btn-copy" :title="$t('publications.detail.copy_citation')">
+            <span v-if="copied">{{ $t('publications.detail.copied') }}</span>
+            <span v-else>{{ $t('publications.detail.copy') }}</span>
           </button>
         </div>
       </div>

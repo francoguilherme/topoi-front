@@ -1,17 +1,17 @@
 <template>
   <div class="authors-page container">
-    <h1>Autores</h1>
+    <h1>{{ $t('authors.title') }}</h1>
 
     <div class="search-bar">
       <input 
         v-model="searchInput" 
         type="text" 
-        placeholder="Buscar por nome, instituição, email ou ORCID..."
+        :placeholder="$t('authors.search_placeholder')"
       >
     </div>
     
-    <div v-if="pending" class="loading">Carregando autores...</div>
-    <div v-else-if="error" class="error">Erro ao carregar autores: {{ error.message }}</div>
+    <div v-if="pending" class="loading">{{ $t('authors.loading') }}</div>
+    <div v-else-if="error" class="error">{{ $t('authors.error_loading', { message: error.message }) }}</div>
     
     <div v-else class="authors-list">
       <ul>
