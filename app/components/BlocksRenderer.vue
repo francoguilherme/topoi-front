@@ -88,13 +88,26 @@ const renderText = (children) => {
   })
 }
 
+const processTextAlignment = (children) => {
+  if (children && children.length > 0 && children[0].type === 'text' && children[0].text && children[0].text.startsWith('_>')) {
+    const firstChild = { ...children[0], text: children[0].text.substring(2) }
+    return {
+      style: { textAlign: 'center' },
+      children: [firstChild, ...children.slice(1)]
+    }
+  }
+  return { style: {}, children }
+}
+
 const renderParagraph = (props) => {
-  return h('p', renderText(props.block.children))
+  const { style, children } = processTextAlignment(props.block.children)
+  return h('p', { style }, renderText(children))
 }
 
 const renderHeading = (props) => {
   const level = props.block.level || 1
-  return h(`h${level}`, renderText(props.block.children))
+  const { style, children } = processTextAlignment(props.block.children)
+  return h(`h${level}`, { style }, renderText(children))
 }
 
 const renderList = (props) => {
