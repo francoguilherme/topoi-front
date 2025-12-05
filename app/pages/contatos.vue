@@ -1,5 +1,5 @@
 <template>
-  <div class="dossie-page container">
+  <div class="container">
     <div v-if="pending" class="loading">{{ $t('common.loading') }}</div>
     <div v-else-if="error" class="error">{{ $t('common.error_loading', { message: error.message }) }}</div>
     <div v-else class="content">
@@ -12,7 +12,7 @@
 const { find } = useStrapi()
 const { locale } = useI18n()
 
-const { data, pending, error } = await useAsyncData('dossie', () => find('dossie', {
+const { data, pending, error } = await useAsyncData('contatos', () => find('contato', {
   locale: locale.value,
   populate: ['pagina']
 }), {

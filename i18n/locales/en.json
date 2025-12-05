@@ -23,14 +23,19 @@
     },
     "nav": {
         "home": "Home",
-        "dossier": "Dossier",
+        "dossier": "Call For Papers",
         "publications": "Publications",
         "editions": "Issues",
         "authors": "Authors",
         "subjects": "Subjects",
         "about": "About",
         "search": "Search",
-        "menu": "Menu"
+        "menu": "Menu",
+        "announcements": "Announcements",
+        "editorial_board": "Editorial Board",
+        "submission": "Submission",
+        "ethics": "Ethics",
+        "contacts": "Contact"
     },
     "footer": {
         "title": "Revista Topoi",

@@ -149,7 +149,6 @@ const renderLink = (props) => {
 .blocks-renderer h4,
 .blocks-renderer h5,
 .blocks-renderer h6 {
-  margin-top: 2rem;
   margin-bottom: 1rem;
 }
 

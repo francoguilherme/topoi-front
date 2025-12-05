@@ -23,7 +23,12 @@
         "subjects": "Temas",
         "about": "Sobre",
         "search": "Buscar",
-        "menu": "Menú"
+        "menu": "Menú",
+        "announcements": "Anuncios",
+        "editorial_board": "Consejo Editorial",
+        "submission": "Instrucciones Para Los Autores",
+        "ethics": "Ética",
+        "contacts": "Contactos"
     },
     "footer": {
         "title": "Revista Topoi",

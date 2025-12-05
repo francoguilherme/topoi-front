@@ -20,7 +20,12 @@
           <li><NuxtLink :to="localePath('/publicacoes')" @click="closeMenu">{{ $t('nav.publications') }}</NuxtLink></li>
           <li><NuxtLink :to="localePath('/edicoes')" @click="closeMenu">{{ $t('nav.editions') }}</NuxtLink></li>
           <li><NuxtLink :to="localePath('/autores')" @click="closeMenu">{{ $t('nav.authors') }}</NuxtLink></li>
-          <li><NuxtLink :to="localePath('/assuntos')" @click="closeMenu">{{ $t('nav.subjects') }}</NuxtLink></li>
+          <li><NuxtLink :to="localePath('/anuncios')" @click="closeMenu">{{ $t('nav.announcements') }}</NuxtLink></li>
+          <li><NuxtLink :to="localePath('/a-topoi')" @click="closeMenu">{{ $t('nav.about') }}</NuxtLink></li>
+          <li><NuxtLink :to="localePath('/corpo-editorial')" @click="closeMenu">{{ $t('nav.editorial_board') }}</NuxtLink></li>
+          <li><NuxtLink :to="localePath('/submissao')" @click="closeMenu">{{ $t('nav.submission') }}</NuxtLink></li>
+          <li><NuxtLink :to="localePath('/principios-eticos')" @click="closeMenu">{{ $t('nav.ethics') }}</NuxtLink></li>
+          <li><NuxtLink :to="localePath('/contatos')" @click="closeMenu">{{ $t('nav.contacts') }}</NuxtLink></li>
           <li class="locale-selector-item">
             <div class="locale-selector" ref="localeSelectorRef">
               <button @click="toggleLocaleMenu" class="locale-btn">
