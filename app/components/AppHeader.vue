@@ -14,24 +14,35 @@
       </button>
       
       <nav :class="{ open: isMenuOpen }">
-        <ul>
+        <ul class="nav-list">
           <li><NuxtLink :to="localePath('/')" @click="closeMenu">{{ $t('nav.home') }}</NuxtLink></li>
           <li><NuxtLink :to="localePath('/dossie')" @click="closeMenu">{{ $t('nav.dossier') }}</NuxtLink></li>
           <li><NuxtLink :to="localePath('/publicacoes')" @click="closeMenu">{{ $t('nav.publications') }}</NuxtLink></li>
           <li><NuxtLink :to="localePath('/edicoes')" @click="closeMenu">{{ $t('nav.editions') }}</NuxtLink></li>
           <li><NuxtLink :to="localePath('/autores')" @click="closeMenu">{{ $t('nav.authors') }}</NuxtLink></li>
           <li><NuxtLink :to="localePath('/anuncios')" @click="closeMenu">{{ $t('nav.announcements') }}</NuxtLink></li>
-          <li><NuxtLink :to="localePath('/a-topoi')" @click="closeMenu">{{ $t('nav.about') }}</NuxtLink></li>
-          <li><NuxtLink :to="localePath('/corpo-editorial')" @click="closeMenu">{{ $t('nav.editorial_board') }}</NuxtLink></li>
-          <li><NuxtLink :to="localePath('/submissao')" @click="closeMenu">{{ $t('nav.submission') }}</NuxtLink></li>
-          <li><NuxtLink :to="localePath('/principios-eticos')" @click="closeMenu">{{ $t('nav.ethics') }}</NuxtLink></li>
-          <li><NuxtLink :to="localePath('/contatos')" @click="closeMenu">{{ $t('nav.contacts') }}</NuxtLink></li>
+          <li class="submission-item"><NuxtLink :to="localePath('/submissao')" @click="closeMenu">{{ $t('nav.submission') }}</NuxtLink></li>
+          <li class="dropdown-item">
+            <div class="dropdown-wrapper" ref="aboutSelectorRef">
+              <button @click="toggleAboutMenu" class="nav-link-btn" :class="{ active: isAboutMenuOpen }">
+                {{ $t('nav.about') }}
+                <i class="fa-solid" :class="{ 'fa-angle-up': isAboutMenuOpen, 'fa-angle-down': !isAboutMenuOpen }"></i>
+              </button>
+              <ul v-if="isAboutMenuOpen" class="dropdown-list">
+                <li><NuxtLink :to="localePath('/a-topoi')" @click="handleLinkClick">{{ $t('nav.the_journal') }}</NuxtLink></li>
+                <li><NuxtLink :to="localePath('/corpo-editorial')" @click="handleLinkClick">{{ $t('nav.editorial_board') }}</NuxtLink></li>
+                <li><NuxtLink :to="localePath('/principios-eticos')" @click="handleLinkClick">{{ $t('nav.ethics') }}</NuxtLink></li>
+                <li><NuxtLink :to="localePath('/contatos')" @click="handleLinkClick">{{ $t('nav.contacts') }}</NuxtLink></li>
+              </ul>
+            </div>
+          </li>
           <li class="locale-selector-item">
             <div class="locale-selector" ref="localeSelectorRef">
               <button @click="toggleLocaleMenu" class="locale-btn">
-                <span class="flag" v-if="flags[currentLocale.code]">{{ flags[currentLocale.code] }}</span>
+                <i class="fa-solid fa-globe"></i>
+                <!--<span class="flag" v-if="flags[currentLocale.code]">{{ flags[currentLocale.code] }}</span>
                 {{ currentLocale.name }}
-                <span class="arrow" :class="{ up: isLocaleMenuOpen }">▼</span>
+                <span class="arrow" :class="{ up: isLocaleMenuOpen }">▼</span>-->
               </button>
               <ul v-if="isLocaleMenuOpen" class="locale-menu">
                 <li v-for="loc in availableLocales" :key="loc.code">
@@ -56,7 +67,9 @@
 <script setup>
 const isMenuOpen = ref(false)
 const isLocaleMenuOpen = ref(false)
+const isAboutMenuOpen = ref(false)
 const localeSelectorRef = ref(null)
+const aboutSelectorRef = ref(null)
 
 const { locale, locales } = useI18n()
 const switchLocalePath = useSwitchLocalePath()
@@ -92,11 +105,27 @@ const closeLocaleMenu = () => {
   isLocaleMenuOpen.value = false
 }
 
+const toggleAboutMenu = () => {
+  isAboutMenuOpen.value = !isAboutMenuOpen.value
+}
+
+const closeAboutMenu = () => {
+  isAboutMenuOpen.value = false
+}
+
+const handleLinkClick = () => {
+  closeMenu()
+  closeAboutMenu()
+}
+
 // Close dropdown when clicking outside
 onMounted(() => {
   document.addEventListener('click', (event) => {
     if (localeSelectorRef.value && !localeSelectorRef.value.contains(event.target)) {
       isLocaleMenuOpen.value = false
+    }
+    if (aboutSelectorRef.value && !aboutSelectorRef.value.contains(event.target)) {
+      isAboutMenuOpen.value = false
     }
   })
 })
@@ -116,8 +145,8 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
   position: relative;
-  max-width: 1200px;
   margin: 0 auto;
   padding: 1rem;
 }
@@ -130,6 +159,18 @@ onMounted(() => {
 .logo-img {
   height: 60px;
   width: auto;
+}
+
+.nav-list {
+  align-items: center;
+}
+
+.submission-item {
+  min-width: 86px;
+}
+
+.fa-globe {
+  font-size: 18px;
 }
 
 .hamburger {
@@ -179,6 +220,66 @@ nav a {
 }
 
 nav a:hover, nav a.router-link-active {
+  color: var(--secondary-color);
+}
+
+/* Dropdown Styles */
+.dropdown-wrapper {
+  position: relative;
+}
+
+.nav-link-btn {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: inherit;
+  font-size: 1rem; /* Match nav a font size usually inherited or explicit */
+  font-weight: 500;
+  color: var(--text-color);
+  padding: 0;
+}
+
+.nav-link-btn:hover, .nav-link-btn.active {
+  color: var(--secondary-color);
+}
+
+.dropdown-list {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  min-width: 150px;
+  margin-top: 0.5rem;
+  display: flex !important; /* Override nav ul display flex default if needed, but flex-direction column here */
+  flex-direction: column;
+  gap: 0;
+  padding: 0.5rem 0;
+  z-index: 102;
+}
+
+.dropdown-list li {
+  width: 100%;
+  border-bottom: none; /* Reset if inherited */
+  text-align: right;
+}
+
+.dropdown-list a {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 400;
+  transition: background-color 0.2s;
+}
+
+.dropdown-list a:hover {
+  background-color: #f5f5f5;
   color: var(--secondary-color);
 }
 
@@ -264,7 +365,7 @@ nav a:hover, nav a.router-link-active {
 }
 
 /* Mobile styles */
-@media (max-width: 768px) {
+@media (max-width: 840px) {
   .hamburger {
     display: flex;
   }
@@ -292,6 +393,22 @@ nav a:hover, nav a.router-link-active {
     padding: 1rem;
   }
 
+  .fa-globe {
+    font-size: 22px;
+  }
+
+  .nav-list {
+    align-items: flex-start;
+  }
+
+  .nav-list li {
+    width: 100%;
+  }
+
+  .dropdown-list li {
+    text-align: left;
+  }
+
   .locale-selector {
     width: 100%;
   }
@@ -299,6 +416,7 @@ nav a:hover, nav a.router-link-active {
   .locale-selector-item {
     width: 100%;
     padding: 0.5rem;
+    order: -1;
   }
   
   .locale-btn {
@@ -321,6 +439,31 @@ nav a:hover, nav a.router-link-active {
   nav a {
     display: block;
     padding: 1rem;
+  }
+
+  .dropdown-wrapper {
+    width: 100%;
+  }
+
+  .nav-link-btn {
+    width: 100%;
+    justify-content: space-between;
+    padding: 1rem;
+  }
+
+  .dropdown-list {
+    position: static;
+    width: 100%;
+    box-shadow: none;
+    border: none;
+    border-top: 1px solid #eee;
+    background-color: #f9f9f9;
+    padding: 0;
+    margin-top: 0;
+  }
+
+  .dropdown-list a {
+    padding-left: 2rem; /* Indent nested items */
   }
 }
 </style>

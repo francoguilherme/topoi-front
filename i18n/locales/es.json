@@ -10,7 +10,7 @@
     },
     "home": {
         "featured_edition": "Edición Destacada",
-        "view_full_edition": "Ver Edición Completa →",
+        "view_full_edition": "Ver Edición Completa",
         "translations": "Traducciones",
         "others": "Otros"
     },
@@ -28,7 +28,8 @@
         "editorial_board": "Consejo Editorial",
         "submission": "Instrucciones Para Los Autores",
         "ethics": "Ética",
-        "contacts": "Contactos"
+        "contacts": "Contactos",
+        "the_journal": "La Revista"
     },
     "footer": {
         "title": "Revista Topoi",

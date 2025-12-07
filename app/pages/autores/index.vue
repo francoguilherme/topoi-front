@@ -107,6 +107,5 @@ watch(searchInput, (newVal) => {
 
 .institution {
   color: #666;
-  margin-left: 0.5rem;
 }
 </style>

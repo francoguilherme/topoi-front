@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/strapi', '@nuxtjs/i18n'],
   i18n: {
-    lazy: true,
+    //lazy: true,
     langDir: 'locales',
     locales: [
       { code: 'pt-BR', iso: 'pt-BR', name: 'Português', file: 'pt-BR.json' },
@@ -20,5 +20,5 @@ export default defineNuxtConfig({
     prefix: '/api',
     version: 'v5'
   },
-  css: ['~/assets/css/main.css']
+  css: ['~/assets/css/main.css', '@fortawesome/fontawesome-free/css/all.css']
 })

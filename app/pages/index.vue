@@ -11,7 +11,7 @@
         <div class="edition-header">
           <h2>{{ $t('home.featured_edition') }}</h2>
           <NuxtLink :to="localePath(`/edicoes/${featuredEdition.numero}-${featuredEdition.volume}`)" class="view-all">
-            {{ $t('home.view_full_edition') }}
+            {{ $t('home.view_full_edition') }} <i class="fa-solid fa-arrow-right"></i>
           </NuxtLink>
         </div>
         
@@ -118,6 +118,7 @@ const articlesBySection = computed(() => {
   padding: 1rem;
   background-color: #f5f5f5;
   border-radius: 4px;
+  width: fit-content;
 }
 
 .edition-info h3 {
