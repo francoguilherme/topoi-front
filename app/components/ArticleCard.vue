@@ -4,7 +4,7 @@
       {{ article.titulo }}
     </h3>
     <div class="meta">
-      <span v-if="article.secao" class="section">{{ $t(`publications.sections.${article.secao}`) }}</span>
+      <span v-if="article.secao && showSection" class="section">{{ $t(`publications.sections.${article.secao}`) }}</span>
       <span 
         v-if="showEdition && article.edicao" 
         class="edition clickable"
@@ -26,9 +26,16 @@
     </div>
     <div class="authors" v-if="article.autores?.length">
       {{ $t('common.by') }} 
-      <span v-for="(autor, index) in article.autores" :key="autor.id">
-        <span v-if="index > 0 && index === article.autores.length - 1">{{ $t('common.and') }} </span>
-        {{ autor.nome }} ({{ autor.instituicao }})<span v-if="index < article.autores.length - 1">; </span>
+      <span v-for="(autor, index) in article.autores" :key="autor.id" >
+        <span v-if="index > 0 && index === article.autores.length - 1">{{ $t('common.and')+' ' }} </span>
+        <span 
+          class="author-name clickable" 
+          @click.prevent.stop="navigateToAuthor(autor.slug)"
+        >
+          {{ autor.nome }}
+        </span>
+        <span> ({{ autor.instituicao }})</span>
+        <span v-if="index < article.autores.length - 1">; </span>
       </span>
     </div>
     <div 
@@ -57,6 +64,10 @@ const props = defineProps({
   showEdition: {
     type: Boolean,
     default: false
+  },
+  showSection: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -79,6 +90,12 @@ const getStrapiMedia = (url) => {
 const navigateToEdition = () => {
   if (props.article.edicao) {
     router.push(localePath(`/edicoes/${props.article.edicao.numero}-${props.article.edicao.volume}`))
+  }
+}
+
+const navigateToAuthor = (slug) => {
+  if (slug) {
+    router.push(localePath(`/autores/${slug}`))
   }
 }
 
@@ -183,6 +200,17 @@ h3 {
   font-size: 0.95rem;
   font-style: italic;
   margin-bottom: 0.5rem;
+}
+
+.author-name.clickable {
+  cursor: pointer;
+  color: #555;
+  font-weight: 500;
+}
+
+.author-name.clickable:hover {
+  text-decoration: underline;
+  color: var(--primary-color);
 }
 
 .summary {

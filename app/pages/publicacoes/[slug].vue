@@ -31,8 +31,13 @@
       <div class="keywords" v-if="article.palavras_chave?.length">
         <h3>{{ $t('publications.detail.keywords') }}</h3>
         <ul>
-          <li v-for="kw in article.palavras_chave" :key="kw.id">
-            {{ kw.texto }} <!-- Assuming 'texto' is the field in 'simples.texto' component -->
+          <li 
+            v-for="kw in article.palavras_chave" 
+            :key="kw.id"
+            class="clickable-keyword"
+            @click="navigateToSearch(kw.texto)"
+          >
+            {{ kw.texto }}
           </li>
         </ul>
       </div>
@@ -59,6 +64,7 @@
 
 <script setup>
 const route = useRoute()
+const router = useRouter()
 const { find } = useStrapi()
 const { locale } = useI18n()
 const localePath = useLocalePath()
@@ -68,6 +74,13 @@ const config = useRuntimeConfig()
 const getStrapiMedia = (url) => {
   if (url.startsWith('http')) return url
   return `${config.public.strapi.url}${url}`
+}
+
+const navigateToSearch = (keyword) => {
+  router.push({
+    path: localePath('/publicacoes'),
+    query: { q: keyword }
+  })
 }
 
 const { data, pending, error } = await useAsyncData(
@@ -225,6 +238,16 @@ const copyCitation = async () => {
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   font-size: 0.9rem;
+}
+
+.clickable-keyword {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.clickable-keyword:hover {
+  background-color: var(--secondary-color);
+  color: white;
 }
 
 .citation-box {

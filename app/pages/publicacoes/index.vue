@@ -4,11 +4,11 @@
 
     <div class="filters-container">
       <div class="search-bar">
-        <input 
+        <SearchInput 
           v-model="searchInput" 
-          type="text" 
           :placeholder="$t('publications.search_placeholder')"
-        >
+          @clear="handleClear"
+        />
       </div>
       
       <div class="section-filter">
@@ -46,17 +46,25 @@
 </template>
 
 <script setup>
+const route = useRoute()
+const router = useRouter()
 const page = ref(1)
 const pageSize = 10
-const search = ref('')
-const searchInput = ref('')
+const search = ref(route.query.q?.toString() || '')
+const searchInput = ref(route.query.q?.toString() || '')
 const selectedSection = ref('')
-let searchTimeout
+const searchTimeout = ref(null)
 
 const sections = ['Artigo', 'Resenha', 'Entrevista', 'Documento', 'Tradução']
 
 const { find } = useStrapi()
 const { locale } = useI18n()
+
+const handleClear = () => {
+  search.value = ''
+  page.value = 1
+  if (searchTimeout.value) clearTimeout(searchTimeout.value)
+}
 
 const { data, pending, error } = await useAsyncData(
   'artigos', 
@@ -66,7 +74,8 @@ const { data, pending, error } = await useAsyncData(
     if (search.value) {
       filters.$or = [
         { titulo: { $containsi: search.value } },
-        { autores: { nome: { $containsi: search.value } } }
+        { autores: { nome: { $containsi: search.value } } },
+        { palavras_chave: { texto: { $containsi: search.value } } }
       ]
     }
     
@@ -91,8 +100,8 @@ const { data, pending, error } = await useAsyncData(
 )
 
 watch(searchInput, (newVal) => {
-  clearTimeout(searchTimeout)
-  searchTimeout = setTimeout(() => {
+  if (searchTimeout.value) clearTimeout(searchTimeout.value)
+  searchTimeout.value = setTimeout(() => {
     search.value = newVal
     page.value = 1
   }, 500)
@@ -112,14 +121,6 @@ watch(selectedSection, () => {
 
 .search-bar {
   flex: 1;
-}
-
-.search-bar input {
-  width: 100%;
-  padding: 0.75rem;
-  font-size: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
 }
 
 .section-filter select {

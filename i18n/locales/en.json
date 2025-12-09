@@ -50,7 +50,7 @@
     },
     "publications": {
         "title": "Publications",
-        "search_placeholder": "Search by title or author...",
+        "search_placeholder": "Search by title, author or keyword...",
         "all_sections": "All sections",
         "loading": "Loading publications...",
         "error_loading": "Error loading publications: {message}",
@@ -89,7 +89,7 @@
             "presentation": "Presentation",
             "editorial": "Editorial: {title}",
             "publications_in_issue": "Publications in this issue",
-            "search_placeholder": "Search by title or author...",
+            "search_placeholder": "Search by title, author or keyword...",
             "no_results_query": "No publications found for \"{query}\".",
             "no_results": "No publications found in this issue."
         }
@@ -104,6 +104,7 @@
             "error_loading": "Error loading author: {message}",
             "not_found": "Author not found.",
             "biography": "Biography",
+            "publication": "Publication",
             "publications": "Publications",
             "loading_publications": "Loading publications...",
             "no_publications": "No publications found."

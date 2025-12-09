@@ -50,7 +50,7 @@
     },
     "publications": {
         "title": "Publicações",
-        "search_placeholder": "Buscar por título ou autor...",
+        "search_placeholder": "Buscar por título, autor ou palavra-chave...",
         "all_sections": "Todas as seções",
         "loading": "Carregando publicações...",
         "error_loading": "Erro ao carregar publicações: {message}",
@@ -89,7 +89,7 @@
             "presentation": "Apresentação",
             "editorial": "Editorial: {title}",
             "publications_in_issue": "Publicações nesta edição",
-            "search_placeholder": "Buscar por título ou autor...",
+            "search_placeholder": "Buscar por título, autor ou palavra-chave...",
             "no_results_query": "Nenhuma publicação encontrada para \"{query}\".",
             "no_results": "Nenhuma publicação encontrada nesta edição."
         }
@@ -104,6 +104,7 @@
             "error_loading": "Erro ao carregar autor: {message}",
             "not_found": "Autor não encontrado.",
             "biography": "Biografia",
+            "publication": "Publicação",
             "publications": "Publicações",
             "loading_publications": "Carregando publicações...",
             "no_publications": "Nenhuma publicação encontrada."

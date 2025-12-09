@@ -47,11 +47,11 @@
         <h2>{{ $t('editions.detail.publications_in_issue') }}</h2>
         
         <div class="search-bar">
-          <input 
+          <SearchInput 
             v-model="searchInput" 
-            type="text" 
             :placeholder="$t('editions.detail.search_placeholder')"
-          >
+            @clear="handleClear"
+          />
         </div>
 
         <div v-if="filteredArticles?.length">
@@ -62,7 +62,8 @@
             <ArticleCard 
               v-for="article in articles" 
               :key="article.id" 
-              :article="article" 
+              :article="article"
+              :show-section="false"
             />
           </div>
         </div>
@@ -81,11 +82,16 @@ const config = useRuntimeConfig()
 
 const searchInput = ref('')
 const searchQuery = ref('')
-let searchTimeout
+const searchTimeout = ref(null)
 
 const getStrapiMedia = (url) => {
   if (url.startsWith('http')) return url
   return `${config.public.strapi.url}${url}`
+}
+
+const handleClear = () => {
+  searchQuery.value = ''
+  if (searchTimeout.value) clearTimeout(searchTimeout.value)
 }
 
 // Parse the issue parameter (e.g., "25-1" -> volume: 25, numero: 1)
@@ -106,7 +112,7 @@ const { data, pending, error } = await useAsyncData(
         populate: ['arquivo']
       },
       artigos: {
-        populate: ['autores', 'arquivo']
+        populate: ['autores', 'arquivo', 'palavras_chave']
       }
     }
   }), {
@@ -133,8 +139,11 @@ const filteredArticles = computed(() => {
     const authorMatch = article.autores?.some(autor => 
       autor.nome?.toLowerCase().includes(query)
     )
+    const keywordMatch = article.palavras_chave?.some(k => 
+      k.texto?.toLowerCase().includes(query)
+    )
     
-    return titleMatch || authorMatch
+    return titleMatch || authorMatch || keywordMatch
   })
 })
 
@@ -154,8 +163,8 @@ const articlesBySection = computed(() => {
 })
 
 watch(searchInput, (newVal) => {
-  clearTimeout(searchTimeout)
-  searchTimeout = setTimeout(() => {
+  if (searchTimeout.value) clearTimeout(searchTimeout.value)
+  searchTimeout.value = setTimeout(() => {
     searchQuery.value = newVal
   }, 500)
 })
@@ -200,14 +209,6 @@ watch(searchInput, (newVal) => {
 
 .search-bar {
   margin-bottom: 1.5rem;
-}
-
-.search-bar input {
-  width: 100%;
-  padding: 0.75rem;
-  font-size: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
 }
 
 .section-group {
