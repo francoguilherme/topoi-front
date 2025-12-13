@@ -69,6 +69,16 @@ const { find } = useStrapi()
 const { locale } = useI18n()
 const localePath = useLocalePath()
 
+const getInitials = (name) => {
+  if (!name) return ''
+  return name
+    .split(' ')
+    .filter(word => word && word[0] === word[0].toUpperCase() && word[0] !== word[0].toLowerCase())
+    .map(word => word[0])
+    .join('')
+    .slice(0, 2)
+}
+
 const handleClear = () => {
   search.value = ''
   page.value = 1

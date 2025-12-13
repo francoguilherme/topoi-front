@@ -12,7 +12,10 @@
             <img :src="getStrapiMedia(edition.capa.url)" :alt="$t('editions.cover_alt', { volume: edition.volume })">
           </div>
           <div class="info">
-            <h2>nº {{ edition.numero }} / V. {{ edition.volume }}</h2>
+            <h2>
+              <span v-if="edition.numero">nº {{ edition.numero }} /</span>
+              V. {{ edition.volume }}
+            </h2>
             <p class="period">{{ edition.periodo }}</p>
             <!--<p class="date" v-if="edition.data_de_publicacao">
               {{ new Date(edition.data_de_publicacao).getFullYear() }}
@@ -36,8 +39,12 @@ const getStrapiMedia = (url) => {
 }
 
 const { data, pending, error } = await useAsyncData('edicoes', () => find('edicoes', {
-  locale: locale.value,
-  sort: ['data_de_publicacao:desc'],
+  locale: "pt-BR",
+  sort: ['volume:desc', 'numero:desc'],
+  pagination: {
+    page: 1,
+    pageSize: 100
+  },
   populate: ['capa']
 }), {
   watch: [locale]

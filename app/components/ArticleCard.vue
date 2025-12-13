@@ -10,7 +10,8 @@
         class="edition clickable"
         @click.prevent.stop="navigateToEdition"
       >
-        nº {{ article.edicao.numero }} / V. {{ article.edicao.volume }}
+        <span v-if="article.edicao.numero">nº {{ article.edicao.numero }} /</span>
+         V. {{ article.edicao.volume }}
       </span>
       <span v-if="article.data_de_publicacao" class="date">
         {{ new Date(article.data_de_publicacao).toLocaleDateString(locale === 'en' ? 'en-US' : locale === 'es' ? 'es-ES' : 'pt-BR') }}
@@ -34,7 +35,7 @@
         >
           {{ autor.nome }}
         </span>
-        <span> ({{ autor.instituicao }})</span>
+        <span v-if="autor.instituicao"> ({{ autor.instituicao }})</span>
         <span v-if="index < article.autores.length - 1">; </span>
       </span>
     </div>

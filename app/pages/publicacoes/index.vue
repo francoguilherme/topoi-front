@@ -84,9 +84,9 @@ const { data, pending, error } = await useAsyncData(
     }
 
     return find('artigos', {
-      locale: locale.value,
+      locale: "pt-BR",
       populate: ['autores', 'edicao', 'arquivo'],
-      sort: ['data_de_publicacao:desc'],
+      sort: ['edicao.volume:desc', 'edicao.numero:desc'],
       pagination: {
         page: page.value,
         pageSize

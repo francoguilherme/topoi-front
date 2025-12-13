@@ -11,7 +11,10 @@
           <img :src="getStrapiMedia(edition.capa.url)" :alt="$t('editions.detail.cover_alt')">
         </div>
         <div class="edition-info">
-          <h1>nº {{ edition.numero }} / V. {{ edition.volume }}</h1>
+          <h1>
+            <span v-if="edition.numero">nº {{ edition.numero }} /</span>
+            V. {{ edition.volume }}
+          </h1>
           <p class="period">{{ edition.periodo }}</p>
           <p class="date" v-if="edition.data_de_publicacao">
             {{ $t('editions.detail.published_at', { date: new Date(edition.data_de_publicacao).toLocaleDateString(locale === 'en' ? 'en-US' : locale === 'es' ? 'es-ES' : 'pt-BR') }) }}
@@ -100,7 +103,7 @@ const [numero, volume] = route.params.issue.split('-').map(Number)
 const { data, pending, error } = await useAsyncData(
   `edicao-${route.params.issue}`, 
   () => find('edicoes', {
-    locale: locale.value,
+    locale: "pt-BR",
     filters: {
       volume: volume,
       numero: numero

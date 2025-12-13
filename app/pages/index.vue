@@ -16,7 +16,10 @@
         </div>
         
         <div class="edition-info">
-          <h3>nº {{ featuredEdition.numero }} / V. {{ featuredEdition.volume }}</h3>
+          <h3>
+            <span v-if="featuredEdition.numero">nº {{ featuredEdition.numero }} /</span>
+            V. {{ featuredEdition.volume }}
+          </h3>
           <p v-if="featuredEdition.periodo">{{ featuredEdition.periodo }}</p>
         </div>
 
@@ -45,7 +48,7 @@ const { locale } = useI18n()
 const localePath = useLocalePath()
 
 const { data, pending, error } = await useAsyncData('home', () => find('home', {
-  locale: locale.value,
+  locale: "pt-BR",
   populate: {
     pagina: {
       populate: {

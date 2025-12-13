@@ -86,7 +86,7 @@ const navigateToSearch = (keyword) => {
 const { data, pending, error } = await useAsyncData(
   `artigo-${route.params.slug}`, 
   () => find('artigos', {
-    locale: locale.value,
+    locale: "pt-BR",
     filters: {
       slug: route.params.slug
     },
