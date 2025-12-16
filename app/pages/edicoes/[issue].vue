@@ -1,6 +1,6 @@
 <template>
   <div class="edition-detail container">
-    <div v-if="pending" class="loading">{{ $t('editions.detail.loading') }}</div>
+    <LoadingSpinner v-if="pending" :text="$t('editions.detail.loading')" />
     <div v-else-if="error || !edition" class="error">
       {{ error ? $t('editions.detail.error_loading', { message: error.message }) : $t('editions.detail.not_found') }}
     </div>
@@ -15,9 +15,9 @@
             <span v-if="edition.numero">nº {{ edition.numero }} /</span>
             V. {{ edition.volume }}
           </h1>
-          <p class="period">{{ edition.periodo }}</p>
+          <p class="period">{{ formatPeriod(edition.periodo) }}</p>
           <p class="date" v-if="edition.data_de_publicacao">
-            {{ $t('editions.detail.published_at', { date: new Date(edition.data_de_publicacao).toLocaleDateString(locale === 'en' ? 'en-US' : locale === 'es' ? 'es-ES' : 'pt-BR') }) }}
+            {{ $t('editions.detail.published_at', { date: new Date(edition.data_de_publicacao).toLocaleDateString(locale === 'en' ? 'en-US' : locale === 'es' ? 'es-ES' : 'pt-BR', {timeZone: 'UTC'}) }) }}
           </p>
           <div v-if="edition.titulo" class="edition-title">
             <h2>{{ edition.titulo }}</h2>
@@ -46,41 +46,94 @@
         </div>
       </header>
 
-      <section class="articles-list">
-        <h2>{{ $t('editions.detail.publications_in_issue') }}</h2>
-        
-        <div class="search-bar">
-          <SearchInput 
-            v-model="searchInput" 
-            :placeholder="$t('editions.detail.search_placeholder')"
-            @clear="handleClear"
-          />
+      <section class="content-tabs">
+        <div class="tabs-header">
+          <button 
+            :class="{ active: currentTab === 'publications' }" 
+            @click="currentTab = 'publications'"
+          >
+            {{ $t('publications.title') }}
+          </button>
+          <button 
+            :class="{ active: currentTab === 'authors' }" 
+            @click="currentTab = 'authors'"
+          >
+            {{ $t('authors.title') }}
+          </button>
         </div>
 
-        <div v-if="filteredArticles?.length">
-          <div v-for="(articles, secao) in articlesBySection" :key="secao" class="section-group">
-            <h3 class="section-title">
-              {{ secao }}
-            </h3>
-            <ArticleCard 
-              v-for="article in articles" 
-              :key="article.id" 
-              :article="article"
-              :show-section="false"
+        <div v-if="currentTab === 'publications'" class="tab-content">
+          <div class="search-bar">
+            <SearchInput 
+              v-model="searchInput" 
+              :placeholder="$t('editions.detail.search_placeholder')"
+              @clear="handleClear"
             />
           </div>
+
+          <div v-if="filteredArticles?.length">
+            <div v-for="(articles, secao) in articlesBySection" :key="secao" class="section-group">
+              <h3 class="section-title">
+                {{ secao }}
+              </h3>
+              <ArticleCard 
+                v-for="article in articles" 
+                :key="article.id" 
+                :article="article"
+                :show-section="false"
+              />
+            </div>
+          </div>
+          <p v-else-if="searchQuery && !pending">{{ $t('editions.detail.no_results_query', { query: searchQuery }) }}</p>
+          <p v-else-if="!pending">{{ $t('editions.detail.no_results') }}</p>
         </div>
-        <p v-else-if="searchQuery">{{ $t('editions.detail.no_results_query', { query: searchQuery }) }}</p>
-        <p v-else>{{ $t('editions.detail.no_results') }}</p>
+
+        <div v-if="currentTab === 'authors'" class="tab-content fade-in">
+          <div class="authors-grid">
+            <NuxtLink 
+              v-for="author in editionAuthors" 
+              :key="author.id" 
+              :to="localePath(`/autores/${author.slug}`)"
+              class="author-card"
+            >
+              <div class="card-content">
+                <div class="avatar-container">
+                  <img 
+                    v-if="author.foto" 
+                    :src="getStrapiMedia(author.foto.url)" 
+                    :alt="author.nome"
+                    class="avatar-image"
+                  >
+                  <div v-else class="avatar-placeholder">
+                    {{ getInitials(author.nome) }}
+                  </div>
+                </div>
+                <div class="info-container">
+                  <h3>
+                    {{ author.nome }}
+                  </h3>
+                  <div class="meta">
+                    <p v-if="author.instituicao" class="institution">
+                      {{ author.instituicao }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </NuxtLink>
+          </div>
+        </div>
       </section>
     </div>
+    <ScrollToTop />
   </div>
 </template>
 
 <script setup>
 const route = useRoute()
+const router = useRouter()
 const { find } = useStrapi()
 const { locale, t } = useI18n()
+const localePath = useLocalePath()
 const config = useRuntimeConfig()
 
 const searchInput = ref('')
@@ -90,6 +143,16 @@ const searchTimeout = ref(null)
 const getStrapiMedia = (url) => {
   if (url.startsWith('http')) return url
   return `${config.public.strapi.url}${url}`
+}
+
+const getInitials = (name) => {
+  if (!name) return ''
+  return name
+    .split(' ')
+    .filter(word => word && word[0] === word[0].toUpperCase() && word[0] !== word[0].toLowerCase())
+    .map(word => word[0])
+    .join('')
+    .slice(0, 2)
 }
 
 const handleClear = () => {
@@ -115,7 +178,13 @@ const { data, pending, error } = await useAsyncData(
         populate: ['arquivo']
       },
       artigos: {
-        populate: ['autores', 'arquivo', 'palavras_chave']
+        populate: {
+          autores: {
+            populate: ['foto']
+          },
+          arquivo: true,
+          palavras_chave: true
+        }
       }
     }
   }), {
@@ -128,6 +197,41 @@ const edition = computed(() => {
     return data.value.data[0]
   }
   return null
+})
+
+const currentTab = ref(route.query.tab?.toString() || 'publications')
+
+watch(currentTab, () => {
+  router.push({
+    query: {
+      ...route.query,
+      tab: currentTab.value
+    }
+  })
+})
+
+watch(() => route.query.tab, (newTab) => {
+  if (newTab) {
+    currentTab.value = newTab.toString()
+  }
+})
+
+const editionAuthors = computed(() => {
+  if (!edition.value?.artigos) return []
+  
+  const authorsMap = new Map()
+  
+  edition.value.artigos.forEach(article => {
+    if (article.autores) {
+      article.autores.forEach(autor => {
+        if (!authorsMap.has(autor.id)) {
+          authorsMap.set(autor.id, autor)
+        }
+      })
+    }
+  })
+  
+  return Array.from(authorsMap.values()).sort((a, b) => a.nome.localeCompare(b.nome))
 })
 
 const filteredArticles = computed(() => {
@@ -171,6 +275,38 @@ watch(searchInput, (newVal) => {
     searchQuery.value = newVal
   }, 500)
 })
+
+const formatPeriod = (periodo) => {
+  if (!periodo) return ''
+  
+  const match = periodo.match(/^([a-zA-ZçÇ]+)\s+-\s+([a-zA-ZçÇ]+)\s+(\d{4})$/i)
+  
+  if (!match) return periodo
+  
+  const [, startMonthPt, endMonthPt, year] = match
+  
+  const ptMonths = {
+    'janeiro': 0, 'fevereiro': 1, 'março': 2, 'abril': 3, 'maio': 4, 'junho': 5,
+    'julho': 6, 'agosto': 7, 'setembro': 8, 'outubro': 9, 'novembro': 10, 'dezembro': 11
+  }
+  
+  const startIdx = ptMonths[startMonthPt.toLowerCase()]
+  const endIdx = ptMonths[endMonthPt.toLowerCase()]
+  
+  if (startIdx === undefined || endIdx === undefined) return periodo
+  
+  const getLocMonth = (idx) => {
+    const date = new Date(Date.UTC(Number(year), idx, 15))
+    return date.toLocaleString(locale.value, { month: 'long', timeZone: 'UTC' })
+  }
+  
+  const startMonthLoc = getLocMonth(startIdx)
+  const endMonthLoc = getLocMonth(endIdx)
+  
+  const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1)
+  
+  return `${cap(startMonthLoc)} - ${cap(endMonthLoc)} ${year}`
+}
 </script>
 
 <style scoped>
@@ -236,6 +372,140 @@ watch(searchInput, (newVal) => {
     flex: 0 0 auto;
     width: 100%;
     max-width: 300px;
+  }
+}
+.tabs-header {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #eee;
+}
+
+.tabs-header button {
+  background: none;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+  color: #666;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.tabs-header button:hover {
+  color: var(--primary-color);
+  background-color: #f9f9f9;
+}
+
+.tabs-header button.active {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+}
+
+.authors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.author-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: all 0.2s;
+  overflow: hidden;
+}
+
+.author-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.card-content {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.avatar-container {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary-color);
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+}
+
+.info-container {
+  flex: 1;
+  min-width: 0; 
+}
+
+.info-container h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.institution {
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .tabs-header {
+    overflow-x: auto;
   }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="home-page container">
-    <div v-if="pending" class="loading">{{ $t('common.loading') }}</div>
+    <LoadingSpinner v-if="pending" :text="$t('common.loading')" />
     <div v-else-if="error" class="error">{{ $t('common.error_loading', { message: error.message }) }}</div>
     <div v-else class="content">
       <!--<h1>{{ data?.data?.displayName || 'Revista Topoi' }}</h1>-->
@@ -39,6 +39,7 @@
         </div>
       </section>
     </div>
+    <ScrollToTop />
   </div>
 </template>
 

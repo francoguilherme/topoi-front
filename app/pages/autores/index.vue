@@ -10,11 +10,8 @@
       />
     </div>
     
-    <div v-if="pending" class="loading">{{ $t('authors.loading') }}</div>
-    <div v-else-if="error" class="error">{{ $t('authors.error_loading', { message: error.message }) }}</div>
-    
-    <div v-else class="authors-list">
-      <div class="authors-grid">
+    <div class="authors-list">
+      <div v-if="data?.data?.length > 0" class="authors-grid">
         <NuxtLink 
           v-for="author in data?.data" 
           :key="author.id"
@@ -49,6 +46,10 @@
           </div>
         </NuxtLink>
       </div>
+      <p v-else-if="search && !pending">{{ $t('authors.detail.no_results', { query: search }) }}</p>
+      <p v-else-if="!pending">{{ $t('authors.detail.no_results') }}</p>
+
+      <LoadingSpinner v-if="pending" :text="$t('authors.loading')" />
 
       <Pagination 
         v-model="page" 
@@ -59,10 +60,12 @@
 </template>
 
 <script setup>
-const page = ref(1)
+const route = useRoute()
+const router = useRouter()
+const page = ref(Number(route.query.page) || 1)
 const pageSize = 20
-const search = ref('')
-const searchInput = ref('')
+const search = ref(route.query.q?.toString() || '')
+const searchInput = ref(route.query.q?.toString() || '')
 const searchTimeout = ref(null)
 
 const { find } = useStrapi()
@@ -81,6 +84,7 @@ const getInitials = (name) => {
 
 const handleClear = () => {
   search.value = ''
+  searchInput.value = ''
   page.value = 1
   if (searchTimeout.value) clearTimeout(searchTimeout.value)
 }
@@ -120,6 +124,28 @@ watch(searchInput, (newVal) => {
     search.value = newVal
     page.value = 1
   }, 500)
+})
+
+// Sync state to URL
+watch([page, search], () => {
+  router.push({
+    query: {
+      ...route.query,
+      page: page.value,
+      q: search.value || undefined
+    }
+  })
+})
+
+// Sync URL to state (for back/forward navigation)
+watch(() => route.query, (newQuery) => {
+  if (newQuery.page) {
+    page.value = Number(newQuery.page)
+  }
+  if (newQuery.q !== undefined && newQuery.q !== search.value) {
+    search.value = newQuery.q?.toString() || ''
+    searchInput.value = newQuery.q?.toString() || ''
+  }
 })
 </script>
 
@@ -211,9 +237,5 @@ watch(searchInput, (newVal) => {
 
 .article-count {
   text-transform: lowercase;
-}
-
-.institution {
-  
 }
 </style>

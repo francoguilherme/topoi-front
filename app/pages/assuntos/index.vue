@@ -2,7 +2,7 @@
   <div class="subjects-page container">
     <h1>{{ $t('subjects.title') }}</h1>
     
-    <div v-if="pending" class="loading">{{ $t('subjects.loading') }}</div>
+    <LoadingSpinner v-if="pending" :text="$t('subjects.loading')" />
     <div v-else-if="error" class="error">{{ $t('subjects.error_loading', { message: error.message }) }}</div>
     
     <div v-else class="subjects-list">

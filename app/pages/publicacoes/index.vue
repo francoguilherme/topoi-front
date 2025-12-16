@@ -21,10 +21,7 @@
       </div>
     </div>
     
-    <div v-if="pending" class="loading">{{ $t('publications.loading') }}</div>
-    <div v-else-if="error" class="error">{{ $t('publications.error_loading', { message: error.message }) }}</div>
-    
-    <div v-else class="articles-list">
+    <div class="articles-list">
       <ArticleCard 
         v-for="article in data?.data" 
         :key="article.id" 
@@ -32,7 +29,7 @@
         :showEdition="true"
       />
       
-      <div v-if="data?.data?.length === 0" class="no-results">
+      <div v-if="data?.data?.length === 0 && !pending" class="no-results">
         {{ $t('publications.no_results') }}
       </div>
 
@@ -48,11 +45,11 @@
 <script setup>
 const route = useRoute()
 const router = useRouter()
-const page = ref(1)
+const page = ref(Number(route.query.page) || 1)
 const pageSize = 10
 const search = ref(route.query.q?.toString() || '')
 const searchInput = ref(route.query.q?.toString() || '')
-const selectedSection = ref('')
+const selectedSection = ref(route.query.section?.toString() || '')
 const searchTimeout = ref(null)
 
 const sections = ['Artigo', 'Resenha', 'Entrevista', 'Documento', 'Tradução']
@@ -62,9 +59,14 @@ const { locale } = useI18n()
 
 const handleClear = () => {
   search.value = ''
+  searchInput.value = ''
   page.value = 1
   if (searchTimeout.value) clearTimeout(searchTimeout.value)
 }
+
+watch(selectedSection, () => {
+  page.value = 1
+})
 
 const { data, pending, error } = await useAsyncData(
   'artigos', 
@@ -107,8 +109,30 @@ watch(searchInput, (newVal) => {
   }, 500)
 })
 
-watch(selectedSection, () => {
-  page.value = 1
+// Sync state to URL
+watch([page, search, selectedSection], () => {
+  router.push({
+    query: {
+      ...route.query,
+      page: page.value,
+      q: search.value || undefined,
+      section: selectedSection.value || undefined
+    }
+  })
+})
+
+// Sync URL to state (for back/forward navigation)
+watch(() => route.query, (newQuery) => {
+  if (newQuery.page) {
+    page.value = Number(newQuery.page)
+  }
+  if (newQuery.q !== undefined && newQuery.q !== search.value) {
+    search.value = newQuery.q?.toString() || ''
+    searchInput.value = newQuery.q?.toString() || ''
+  }
+  if (newQuery.section !== undefined && newQuery.section !== selectedSection.value) {
+    selectedSection.value = newQuery.section?.toString() || ''
+  }
 })
 </script>
 
@@ -116,6 +140,7 @@ watch(selectedSection, () => {
 .filters-container {
   display: flex;
   gap: 0.5rem;
+  align-items: center;
   margin-bottom: 2rem;
 }
 
@@ -136,9 +161,14 @@ watch(selectedSection, () => {
 @media (max-width: 768px) {
   .filters-container {
     flex-direction: column;
+    align-items: end;
   }
   
   .section-filter select {
+    width: 100%;
+  }
+
+  .search-bar {
     width: 100%;
   }
 }

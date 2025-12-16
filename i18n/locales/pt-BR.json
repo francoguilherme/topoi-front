@@ -23,6 +23,7 @@
     },
     "nav": {
         "home": "Início",
+        "shortcuts": "Acesso rápido",
         "dossier": "Dossiê",
         "publications": "Publicações",
         "editions": "Edições",
@@ -50,7 +51,7 @@
     },
     "publications": {
         "title": "Publicações",
-        "search_placeholder": "Buscar por título, autor ou palavra-chave...",
+        "search_placeholder": "Buscar por título, autor, palavra-chave...",
         "all_sections": "Todas as seções",
         "loading": "Carregando publicações...",
         "error_loading": "Erro ao carregar publicações: {message}",
@@ -89,14 +90,14 @@
             "presentation": "Apresentação",
             "editorial": "Editorial: {title}",
             "publications_in_issue": "Publicações nesta edição",
-            "search_placeholder": "Buscar por título, autor ou palavra-chave...",
+            "search_placeholder": "Buscar por título, autor, palavra-chave...",
             "no_results_query": "Nenhuma publicação encontrada para \"{query}\".",
             "no_results": "Nenhuma publicação encontrada nesta edição."
         }
     },
     "authors": {
         "title": "Autores",
-        "search_placeholder": "Buscar por nome, instituição, email ou ORCID...",
+        "search_placeholder": "Buscar por nome, instituição, email, ORCID...",
         "loading": "Carregando autores...",
         "error_loading": "Erro ao carregar autores: {message}",
         "detail": {
@@ -107,7 +108,8 @@
             "publication": "Publicação",
             "publications": "Publicações",
             "loading_publications": "Carregando publicações...",
-            "no_publications": "Nenhuma publicação encontrada."
+            "no_publications": "Nenhuma publicação encontrada.",
+            "no_results": "Nenhum autor encontrado para \"{query}\"."
         }
     },
     "subjects": {

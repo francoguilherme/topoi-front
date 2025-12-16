@@ -1,17 +1,20 @@
 <template>
   <div class="article-detail container">
-    <div v-if="pending" class="loading">{{ $t('publications.detail.loading') }}</div>
+    <LoadingSpinner v-if="pending" :text="$t('publications.detail.loading')" />
     <div v-else-if="error || !article" class="error">
       {{ error ? $t('publications.detail.error_loading', { message: error.message }) : $t('publications.detail.not_found') }}
     </div>
     
     <article v-else class="content">
       <header class="article-header">
-        <h1>{{ article.titulo }}</h1>
+        <h1>
+          {{ formattedTitle.main }}
+          <span v-if="formattedTitle.subtitle" class="subtitle">{{ formattedTitle.subtitle }}</span>
+        </h1>
         <div class="meta">
           <span v-if="article.secao" class="section">{{ $t(`publications.sections.${article.secao}`) }}</span>
           <span v-if="article.data_de_publicacao" class="date">
-            {{ new Date(article.data_de_publicacao).toLocaleDateString(locale === 'en' ? 'en-US' : locale === 'es' ? 'es-ES' : 'pt-BR') }}
+            {{ formatDate(article.data_de_publicacao) }}
           </span>
         </div>
         <div class="authors" v-if="article.autores?.length">
@@ -103,6 +106,20 @@ const article = computed(() => {
   return null
 })
 
+const formattedTitle = computed(() => {
+  if (!article.value?.titulo) return { main: '', subtitle: '' }
+  
+  const parts = article.value.titulo.split(':')
+  if (parts.length > 1) {
+    return {
+      main: parts[0] + ':',
+      subtitle: parts.slice(1).join(':').trim()
+    }
+  }
+  
+  return { main: article.value.titulo, subtitle: '' }
+})
+
 const formatAuthorName = (name) => {
   if (!name) return ''
   const parts = name.trim().split(' ')
@@ -110,6 +127,15 @@ const formatAuthorName = (name) => {
   const lastName = parts.pop().toUpperCase()
   const firstName = parts.join(' ')
   return `${lastName}, ${firstName}`
+}
+
+const formatDate = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  if (date.getUTCMonth() === 0 && date.getUTCDate() === 1) {
+    return date.getUTCFullYear().toString()
+  }
+  return date.toLocaleDateString(locale.value === 'en' ? 'en-US' : locale.value === 'es' ? 'es-ES' : 'pt-BR', {timeZone: 'UTC'})
 }
 
 const citation = computed(() => {
@@ -124,7 +150,7 @@ const citation = computed(() => {
   if (!ed) return ''
   
   const vol = `v. ${ed.volume}`
-  const num = `n. ${ed.numero}`
+  const num = ed.numero? `n. ${ed.numero}, ` : ''
   
   // Try to get date from edition or article
   const dateStr = ed.data_de_publicacao || article.value.data_de_publicacao
@@ -145,7 +171,7 @@ const citation = computed(() => {
   }
   
   // Construct HTML string with bold journal name
-  return `${authors}. ${title}. <strong>${journal}</strong>, ${city}, ${vol}, ${num}, ${pages}${datePart}.`
+  return `${authors}. ${title}. <strong>${journal}</strong>, ${city}, ${vol}, ${num}${pages}${datePart}.`
 })
 
 const copied = ref(false)
@@ -200,6 +226,19 @@ const copyCitation = async () => {
   margin-bottom: 2rem;
   border-bottom: 1px solid #eee;
   padding-bottom: 1rem;
+}
+
+.article-header h1 {
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.subtitle {
+  display: block;
+  font-size: 0.8em;
+  font-weight: normal;
+  color: #555;
+  margin-top: 0.25rem;
 }
 
 .meta {
@@ -304,6 +343,6 @@ const copyCitation = async () => {
 }
 
 .btn-download:hover {
-  background-color: #6a1630;
+  background-color: var(--secondary-color-dark);
 }
 </style>

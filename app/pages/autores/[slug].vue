@@ -1,6 +1,6 @@
 <template>
   <div class="author-detail container">
-    <div v-if="pendingAuthor" class="loading">{{ $t('authors.detail.loading') }}</div>
+    <LoadingSpinner v-if="pendingAuthor" :text="$t('authors.detail.loading')" />
     <div v-else-if="errorAuthor || !author" class="error">
       {{ errorAuthor ? $t('authors.detail.error_loading', { message: errorAuthor.message }) : $t('authors.detail.not_found') }}
     </div>
@@ -29,8 +29,7 @@
       <section class="author-articles">
         <h2>{{ $t('authors.detail.publications') }}</h2>
         
-        <div v-if="pendingArticles" class="loading">{{ $t('authors.detail.loading_publications') }}</div>
-        <div v-else-if="articlesData?.data?.length">
+        <div v-if="articlesData?.data?.length">
           <ArticleCard 
             v-for="article in articlesData.data" 
             :key="article.id" 
@@ -51,6 +50,7 @@
 
 <script setup>
 const route = useRoute()
+const router = useRouter()
 const { find } = useStrapi()
 const { locale } = useI18n()
 const config = useRuntimeConfig()
@@ -60,8 +60,25 @@ const getStrapiMedia = (url) => {
   return `${config.public.strapi.url}${url}`
 }
 
-const page = ref(1)
+const page = ref(Number(route.query.page) || 1)
 const pageSize = 5
+
+// Sync state to URL
+watch(page, () => {
+  router.push({
+    query: {
+      ...route.query,
+      page: page.value
+    }
+  })
+})
+
+// Sync URL to state (for back/forward navigation)
+watch(() => route.query.page, (newPage) => {
+  if (newPage) {
+    page.value = Number(newPage)
+  }
+})
 
 const { data: authorData, pending: pendingAuthor, error: errorAuthor } = await useAsyncData(
   `autor-${route.params.slug}`, 

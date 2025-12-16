@@ -14,7 +14,7 @@
          V. {{ article.edicao.volume }}
       </span>
       <span v-if="article.data_de_publicacao" class="date">
-        {{ new Date(article.data_de_publicacao).toLocaleDateString(locale === 'en' ? 'en-US' : locale === 'es' ? 'es-ES' : 'pt-BR') }}
+        {{ formatDate(article.data_de_publicacao) }}
       </span>
       <a 
         v-if="article.arquivo" 
@@ -126,6 +126,15 @@ const handleDownload = async () => {
   } finally {
     isDownloading.value = false
   }
+}
+
+const formatDate = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  if (date.getUTCMonth() === 0 && date.getUTCDate() === 1) {
+    return date.getUTCFullYear().toString()
+  }
+  return date.toLocaleDateString(locale.value === 'en' ? 'en-US' : locale.value === 'es' ? 'es-ES' : 'pt-BR', {timeZone: 'UTC'})
 }
 </script>
 

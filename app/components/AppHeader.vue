@@ -16,7 +16,7 @@
       <nav :class="{ open: isMenuOpen }">
         <ul class="nav-list">
           <li><NuxtLink :to="localePath('/')" @click="closeMenu">{{ $t('nav.home') }}</NuxtLink></li>
-          <li><NuxtLink :to="localePath('/dossie')" @click="closeMenu">{{ $t('nav.dossier') }}</NuxtLink></li>
+          <li><NuxtLink :to="localePath('/dossie-tematico')" @click="closeMenu">{{ $t('nav.dossier') }}</NuxtLink></li>
           <li><NuxtLink :to="localePath('/publicacoes')" @click="closeMenu">{{ $t('nav.publications') }}</NuxtLink></li>
           <li><NuxtLink :to="localePath('/edicoes')" @click="closeMenu">{{ $t('nav.editions') }}</NuxtLink></li>
           <li><NuxtLink :to="localePath('/autores')" @click="closeMenu">{{ $t('nav.authors') }}</NuxtLink></li>
