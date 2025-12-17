@@ -67,6 +67,12 @@ const pageSize = 20
 const search = ref(route.query.q?.toString() || '')
 const searchInput = ref(route.query.q?.toString() || '')
 const searchTimeout = ref(null)
+const config = useRuntimeConfig();
+
+const getStrapiMedia = (url) => {
+  if (url.startsWith('http')) return url
+  return `${config.public.strapi.url}${url}`
+}
 
 const { find } = useStrapi()
 const { locale } = useI18n()

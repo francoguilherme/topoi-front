@@ -6,7 +6,14 @@
         "download": "Descargar",
         "more": "más",
         "by": "Por:",
-        "and": "y"
+        "and": "y",
+        "sections": {
+            "Artigo": "Artículo",
+            "Resenha": "Reseña",
+            "Entrevista": "Entrevista",
+            "Documento": "Documento",
+            "Tradução": "Tradução"
+        }
     },
     "home": {
         "featured_edition": "Edición Destacada",

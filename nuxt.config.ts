@@ -20,5 +20,12 @@ export default defineNuxtConfig({
     prefix: '/api',
     version: 'v5'
   },
+  runtimeConfig: {
+    public: {
+      strapi: {
+        url: process.env.STRAPI_URL
+      }
+    }
+  },
   css: ['~/assets/css/main.css', '@fortawesome/fontawesome-free/css/all.css']
 })
