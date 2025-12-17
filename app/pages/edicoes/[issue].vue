@@ -19,8 +19,8 @@
           <p class="date" v-if="edition.data_de_publicacao">
             {{ $t('editions.detail.published_at', { date: new Date(edition.data_de_publicacao).toLocaleDateString(locale === 'en' ? 'en-US' : locale === 'es' ? 'es-ES' : 'pt-BR', {timeZone: 'UTC'}) }) }}
           </p>
-          <div v-if="edition.titulo" class="edition-title">
-            <h2>{{ edition.titulo }}</h2>
+          <div v-if="displayTitle" class="edition-title">
+            <h2>{{ displayTitle }}</h2>
           </div>
           <p v-if="edition.descricao" class="description">{{ edition.descricao }}</p>
           
@@ -166,7 +166,6 @@ const [numero, volume] = route.params.issue.split('-').map(Number)
 const { data, pending, error } = await useAsyncData(
   `edicao-${route.params.issue}`, 
   () => find('edicoes', {
-    locale: "pt-BR",
     filters: {
       volume: volume,
       numero: numero
@@ -187,9 +186,7 @@ const { data, pending, error } = await useAsyncData(
         }
       }
     }
-  }), {
-    watch: [locale]
-  }
+  })
 )
 
 const edition = computed(() => {
@@ -197,6 +194,18 @@ const edition = computed(() => {
     return data.value.data[0]
   }
   return null
+})
+
+const displayTitle = computed(() => {
+  if (!edition.value) return ''
+  
+  if (locale.value === 'en' && edition.value.titulo_en) {
+    return edition.value.titulo_en
+  }
+  if (locale.value === 'es' && edition.value.titulo_es) {
+    return edition.value.titulo_es
+  }
+  return edition.value.titulo
 })
 
 const currentTab = ref(route.query.tab?.toString() || 'publications')
@@ -242,7 +251,9 @@ const filteredArticles = computed(() => {
   const query = searchQuery.value.toLowerCase()
   
   return edition.value.artigos.filter(article => {
-    const titleMatch = article.titulo?.toLowerCase().includes(query)
+    const titleMatch = article.titulo?.toLowerCase().includes(query) || 
+                       article.titulo_en?.toLowerCase().includes(query) || 
+                       article.titulo_es?.toLowerCase().includes(query)
     const authorMatch = article.autores?.some(autor => 
       autor.nome?.toLowerCase().includes(query)
     )

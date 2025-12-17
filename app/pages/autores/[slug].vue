@@ -81,16 +81,13 @@ watch(() => route.query.page, (newPage) => {
 })
 
 const { data: authorData, pending: pendingAuthor, error: errorAuthor } = await useAsyncData(
-  `autor-${route.params.slug}`, 
+  `autor-${route.params.slug}`,
   () => find('autores', {
-    locale: locale.value,
     filters: {
       slug: route.params.slug
     },
     populate: ['foto']
-  }), {
-    watch: [locale]
-  }
+  })
 )
 
 const author = computed(() => {
@@ -101,9 +98,8 @@ const author = computed(() => {
 })
 
 const { data: articlesData, pending: pendingArticles, error: errorArticles } = await useAsyncData(
-  `autor-artigos-${route.params.slug}`,
+  `autor-artigos-${route.params.slug}-${locale.value}`,
   () => find('artigos', {
-    locale: locale.value,
     filters: {
       autores: {
         slug: route.params.slug

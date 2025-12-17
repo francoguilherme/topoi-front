@@ -48,66 +48,22 @@ const { find } = useStrapi()
 const { locale } = useI18n()
 const localePath = useLocalePath()
 
-const { data, pending, error } = await useAsyncData('home', async () => {
-  const currentLocale = locale.value
-
-  // Case 1: If current locale is pt-BR, fetch everything in one go
-  if (currentLocale === 'pt-BR') {
-    return find('home', {
-      locale: 'pt-BR',
+const { data, pending, error } = await useAsyncData('home', () => find('home', {
+  locale: locale.value,
+  populate: {
+    pagina: {
       populate: {
-        pagina: {
+        edicao: {
           populate: {
-            edicao: {
-              populate: {
-                artigos: {
-                  populate: ['autores', 'arquivo']
-                }
-              }
+            artigos: {
+              populate: ['autores', 'arquivo']
             }
           }
         }
       }
-    })
+    }
   }
-
-  // Case 2: Mixed locales - fetch content in current locale, but edition/articles from pt-BR
-  const [localHome, ptHome] = await Promise.all([
-    // Fetch content in current locale
-    find('home', {
-      locale: currentLocale,
-      populate: {
-        pagina: {
-          populate: '*'
-        }
-      }
-    }),
-    // Fetch edition/articles from pt-BR
-    find('home', {
-      locale: 'pt-BR',
-      populate: {
-        pagina: {
-          populate: {
-            edicao: {
-              populate: {
-                artigos: {
-                  populate: ['autores', 'arquivo']
-                }
-              }
-            }
-          }
-        }
-      }
-    })
-  ])
-
-  // Merge the pt-BR edition into the localized response
-  if (localHome.data?.pagina && ptHome.data?.pagina?.edicao) {
-    localHome.data.pagina.edicao = ptHome.data.pagina.edicao
-  }
-
-  return localHome
-}, {
+}), {
   watch: [locale]
 })
 

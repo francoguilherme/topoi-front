@@ -7,13 +7,13 @@
         </NuxtLink>
       </div>
       
-      <button class="hamburger" @click="toggleMenu" :class="{ active: isMenuOpen }" :aria-label="$t('nav.menu')">
+      <button class="hamburger" ref="hamburgerRef" @click="toggleMenu" :class="{ active: isMenuOpen }" :aria-label="$t('nav.menu')">
         <span></span>
         <span></span>
         <span></span>
       </button>
       
-      <nav :class="{ open: isMenuOpen }">
+      <nav ref="navMenuRef" :class="{ open: isMenuOpen }">
         <ul class="nav-list">
           <li><NuxtLink :to="localePath('/')" @click="closeMenu">{{ $t('nav.home') }}</NuxtLink></li>
           <li><NuxtLink :to="localePath('/dossie-tematico')" @click="closeMenu">{{ $t('nav.dossier') }}</NuxtLink></li>
@@ -70,6 +70,8 @@ const isLocaleMenuOpen = ref(false)
 const isAboutMenuOpen = ref(false)
 const localeSelectorRef = ref(null)
 const aboutSelectorRef = ref(null)
+const navMenuRef = ref(null)
+const hamburgerRef = ref(null)
 
 const { locale, locales } = useI18n()
 const switchLocalePath = useSwitchLocalePath()
@@ -118,14 +120,22 @@ const handleLinkClick = () => {
   closeAboutMenu()
 }
 
-// Close dropdown when clicking outside
+// Close dropdowns and menu when clicking outside
 onMounted(() => {
   document.addEventListener('click', (event) => {
+    // Close locale dropdown
     if (localeSelectorRef.value && !localeSelectorRef.value.contains(event.target)) {
       isLocaleMenuOpen.value = false
     }
+    // Close about dropdown
     if (aboutSelectorRef.value && !aboutSelectorRef.value.contains(event.target)) {
       isAboutMenuOpen.value = false
+    }
+    // Close mobile menu
+    if (isMenuOpen.value && 
+        navMenuRef.value && !navMenuRef.value.contains(event.target) && 
+        hamburgerRef.value && !hamburgerRef.value.contains(event.target)) {
+      isMenuOpen.value = false
     }
   })
 })

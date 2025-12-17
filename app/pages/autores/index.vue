@@ -96,9 +96,8 @@ const handleClear = () => {
 }
 
 const { data, pending, error } = await useAsyncData(
-  'autores', 
+  `autores-${locale.value}`, 
   () => find('autores', {
-    locale: locale.value,
     sort: ['nome:asc'],
     populate: {
       artigos: {

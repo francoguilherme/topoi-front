@@ -1,7 +1,7 @@
 <template>
   <NuxtLink :to="localePath(`/publicacoes/${article.slug}`)" class="article-card">
     <h3>
-      {{ article.titulo }}
+      {{ displayTitle }}
     </h3>
     <div class="meta">
       <span v-if="article.secao && showSection" class="section">{{ $t(`publications.sections.${article.secao}`) }}</span>
@@ -78,6 +78,16 @@ const { locale } = useI18n()
 const localePath = useLocalePath()
 const isExpanded = ref(false)
 const isDownloading = ref(false)
+
+const displayTitle = computed(() => {
+  if (locale.value === 'en' && props.article.titulo_en) {
+    return props.article.titulo_en
+  }
+  if (locale.value === 'es' && props.article.titulo_es) {
+    return props.article.titulo_es
+  }
+  return props.article.titulo
+})
 
 const toggleExpand = () => {
   isExpanded.value = !isExpanded.value

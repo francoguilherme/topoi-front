@@ -26,7 +26,7 @@ const { find } = useStrapi()
 const { locale } = useI18n()
 const localePath = useLocalePath()
 
-const { data, pending, error } = await useAsyncData('assuntos', () => find('assuntos', {
+const { data, pending, error } = await useAsyncData(`assuntos-${locale.value}`, () => find('assuntos', {
   locale: locale.value,
   sort: ['nome:asc'],
   pagination: {

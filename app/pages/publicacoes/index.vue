@@ -69,13 +69,15 @@ watch(selectedSection, () => {
 })
 
 const { data, pending, error } = await useAsyncData(
-  'artigos', 
+  `artigos-${locale.value}`, 
   () => {
     const filters = {}
     
     if (search.value) {
       filters.$or = [
         { titulo: { $containsi: search.value } },
+        { titulo_en: { $containsi: search.value } },
+        { titulo_es: { $containsi: search.value } },
         { autores: { nome: { $containsi: search.value } } },
         { palavras_chave: { texto: { $containsi: search.value } } }
       ]
@@ -86,7 +88,6 @@ const { data, pending, error } = await useAsyncData(
     }
 
     return find('artigos', {
-      locale: "pt-BR",
       populate: ['autores', 'edicao', 'arquivo'],
       sort: ['edicao.volume:desc', 'edicao.numero:desc'],
       pagination: {

@@ -13,6 +13,15 @@
         </h1>
         <div class="meta">
           <span v-if="article.secao" class="section">{{ $t(`publications.sections.${article.secao}`) }}</span>
+          
+          <NuxtLink 
+            v-if="article.edicao" 
+            :to="localePath(`/edicoes/${article.edicao.numero}-${article.edicao.volume}`)"
+            class="edition-link"
+          >
+            <span v-if="article.edicao.numero">nº {{ article.edicao.numero }} / </span>V. {{ article.edicao.volume }}
+          </NuxtLink>
+
           <span v-if="article.data_de_publicacao" class="date">
             {{ formatDate(article.data_de_publicacao) }}
           </span>
@@ -87,16 +96,13 @@ const navigateToSearch = (keyword) => {
 }
 
 const { data, pending, error } = await useAsyncData(
-  `artigo-${route.params.slug}`, 
+  `artigo-${route.params.slug}`,
   () => find('artigos', {
-    locale: "pt-BR",
     filters: {
       slug: route.params.slug
     },
     populate: ['autores', 'arquivo', 'palavras_chave', 'edicao']
-  }), {
-    watch: [locale]
-  }
+  })
 )
 
 const article = computed(() => {
@@ -107,9 +113,17 @@ const article = computed(() => {
 })
 
 const formattedTitle = computed(() => {
-  if (!article.value?.titulo) return { main: '', subtitle: '' }
+  let titleToUse = article.value?.titulo
   
-  const parts = article.value.titulo.split(':')
+  if (locale.value === 'en' && article.value?.titulo_en) {
+    titleToUse = article.value.titulo_en
+  } else if (locale.value === 'es' && article.value?.titulo_es) {
+    titleToUse = article.value.titulo_es
+  }
+
+  if (!titleToUse) return { main: '', subtitle: '' }
+  
+  const parts = titleToUse.split(':')
   if (parts.length > 1) {
     return {
       main: parts[0] + ':',
@@ -117,7 +131,7 @@ const formattedTitle = computed(() => {
     }
   }
   
-  return { main: article.value.titulo, subtitle: '' }
+  return { main: titleToUse, subtitle: '' }
 })
 
 const formatAuthorName = (name) => {
@@ -142,7 +156,13 @@ const citation = computed(() => {
   if (!article.value) return ''
   
   const authors = article.value.autores?.map(a => formatAuthorName(a.nome)).join('; ') || ''
-  const title = article.value.titulo
+  
+  let title = article.value.titulo
+  /*if (locale.value === 'en' && article.value.titulo_en) {
+    title = article.value.titulo_en
+  } else if (locale.value === 'es' && article.value.titulo_es) {
+    title = article.value.titulo_es
+  }*/
   const journal = 'Revista Topoi'
   const city = 'Rio de Janeiro'
   
@@ -159,8 +179,8 @@ const citation = computed(() => {
   if (dateStr) {
     const date = new Date(dateStr)
     const months = ['jan.', 'fev.', 'mar.', 'abr.', 'maio', 'jun.', 'jul.', 'ago.', 'set.', 'out.', 'nov.', 'dez.']
-    const month = months[date.getMonth()]
-    const year = date.getFullYear()
+    const month = months[date.getUTCMonth()]
+    const year = date.getUTCFullYear()
     datePart = `${month} ${year}`
   }
   
@@ -250,6 +270,22 @@ const copyCitation = async () => {
   font-weight: bold;
   color: var(--secondary-color);
   margin-right: 1rem;
+}
+
+.edition-link {
+  font-weight: 500;
+  color: var(--primary-color);
+  background-color: #f0f0f0;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  transition: background-color 0.2s;
+  margin-right: 1rem;
+}
+
+.edition-link:hover {
+  background-color: #e0e0e0;
+  text-decoration: underline;
 }
 
 .authors a {

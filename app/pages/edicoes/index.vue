@@ -17,7 +17,7 @@
               </p>
             </div>
             <div class="info">
-              <h1>{{ edition.titulo }}</h1>
+              <h1>{{ getEditionTitle(edition) }}</h1>
               <h2>
                 <span v-if="edition.numero">nº {{ edition.numero }} /</span>
                 V. {{ edition.volume }}
@@ -55,8 +55,7 @@ const router = useRouter()
 const page = ref(Number(route.query.page) || 1)
 const pageSize = 10
 
-const { data, pending, error } = await useAsyncData('edicoes', () => find('edicoes', {
-  locale: "pt-BR",
+const { data, pending, error } = await useAsyncData(`edicoes-${locale.value}`, () => find('edicoes', {
   sort: ['volume:desc', 'numero:desc'],
   pagination: {
     page: page.value,
@@ -64,7 +63,7 @@ const { data, pending, error } = await useAsyncData('edicoes', () => find('edico
   },
   populate: ['capa']
 }), {
-  watch: [locale, page]
+  watch: [page, locale]
 })
 
 // Sync state to URL
@@ -83,6 +82,18 @@ watch(() => route.query.page, (newPage) => {
     page.value = Number(newPage)
   }
 })
+
+const getEditionTitle = (edition) => {
+  if (!edition) return ''
+  
+  if (locale.value === 'en' && edition.titulo_en) {
+    return edition.titulo_en
+  }
+  if (locale.value === 'es' && edition.titulo_es) {
+    return edition.titulo_es
+  }
+  return edition.titulo
+}
 
 const formatPeriod = (periodo) => {
   if (!periodo) return ''
