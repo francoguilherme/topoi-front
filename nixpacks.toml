@@ -2,7 +2,11 @@
 nixPkgs = ["nodejs_22"]
 
 [phases.install]
-cmds = ["npm ci"]
+cmds = [
+  "npm config set optional=true",
+  "npm ci",
+  "npm rebuild"
+]
 
 [phases.build]
 cmds = ["npm run build"]
