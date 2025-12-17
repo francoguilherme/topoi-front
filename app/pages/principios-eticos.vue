@@ -5,6 +5,7 @@
     <div v-else class="content">
       <BlocksRenderer v-if="data?.data?.pagina?.conteudo" :content="data.data.pagina.conteudo" />
     </div>
+    <ScrollToTop />
   </div>
 </template>
 

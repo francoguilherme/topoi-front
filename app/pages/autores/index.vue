@@ -56,6 +56,7 @@
         :totalPages="data?.meta?.pagination?.pageCount" 
       />
     </div>
+    <ScrollToTop />
   </div>
 </template>
 
