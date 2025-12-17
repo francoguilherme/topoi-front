@@ -150,6 +150,7 @@ const renderLink = (props) => {
 <style scoped>
 .blocks-renderer {
   line-height: 1.8;
+  word-break: break-word;
 }
 
 .blocks-renderer p {

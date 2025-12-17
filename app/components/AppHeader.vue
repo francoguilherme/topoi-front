@@ -387,10 +387,12 @@ nav a:hover, nav a.router-link-active {
     width: 70%;
     max-width: 300px;
     height: 100vh;
+    height: 100dvh;
     background-color: #fff;
     box-shadow: -2px 0 10px rgba(0,0,0,0.1);
     transition: right 0.3s ease;
     padding-top: 5rem;
+    overflow-y: auto;
   }
   
   nav.open {
