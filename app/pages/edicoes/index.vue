@@ -17,7 +17,10 @@
               </p>
             </div>
             <div class="info">
-              <h1>{{ getEditionTitle(edition) }}</h1>
+              <h1 v-if="edition.titulo">
+                {{ $t('dossier.default_title') }}:
+                {{ getEditionTitle(edition) }}
+              </h1>
               <h2>
                 <span v-if="edition.numero">nº {{ edition.numero }} /</span>
                 V. {{ edition.volume }}
@@ -166,8 +169,8 @@ const formatPeriod = (periodo) => {
 }
 
 .cover.placeholder {
-  background-color: var(--primary-color);
-  color: white;
+  background-color: var(--secondary-color-light);
+  color: var(--secondary-color-dark);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -176,7 +179,7 @@ const formatPeriod = (periodo) => {
   padding: 1rem;
   text-align: center;
   font-weight: bold;
-
+  font-family: var(--font-serif);
   font-size: 1.2rem;
 }
 

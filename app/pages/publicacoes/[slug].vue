@@ -172,16 +172,20 @@ const citation = computed(() => {
   const vol = `v. ${ed.volume}`
   const num = ed.numero? `n. ${ed.numero}, ` : ''
   
-  // Try to get date from edition or article
-  const dateStr = ed.data_de_publicacao || article.value.data_de_publicacao
+  const dateStr = article.value.data_de_publicacao
   let datePart = ''
-  
   if (dateStr) {
     const date = new Date(dateStr)
-    const months = ['jan.', 'fev.', 'mar.', 'abr.', 'maio', 'jun.', 'jul.', 'ago.', 'set.', 'out.', 'nov.', 'dez.']
-    const month = months[date.getUTCMonth()]
-    const year = date.getUTCFullYear()
-    datePart = `${month} ${year}`
+    if (date.getUTCMonth() === 0 && date.getUTCDate() === 1) {
+      datePart = date.getUTCFullYear().toString()
+    } else {
+      const months = ['jan.', 'fev.', 'mar.', 'abr.', 'maio', 'jun.', 'jul.', 'ago.', 'set.', 'out.', 'nov.', 'dez.']
+      const month = months[date.getUTCMonth()]
+      const year = date.getUTCFullYear()
+      datePart = `${month} ${year}`
+    }
+  } else {
+    datePart = '[s.d.]'
   }
   
   // Pages - checking if fields exist
@@ -295,6 +299,7 @@ const copyCitation = async () => {
 .abstract {
   margin-bottom: 2rem;
   line-height: 1.8;
+  text-align: justify;
 }
 
 .keywords {

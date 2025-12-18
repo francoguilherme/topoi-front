@@ -20,7 +20,10 @@
             {{ $t('editions.detail.published_at', { date: new Date(edition.data_de_publicacao).toLocaleDateString(locale === 'en' ? 'en-US' : locale === 'es' ? 'es-ES' : 'pt-BR', {timeZone: 'UTC'}) }) }}
           </p>
           <div v-if="displayTitle" class="edition-title">
-            <h2>{{ displayTitle }}</h2>
+            <h2>
+              {{ $t('dossier.default_title') }}:
+              {{ displayTitle }}
+            </h2>
           </div>
           <p v-if="edition.descricao" class="description">{{ edition.descricao }}</p>
           
@@ -267,9 +270,12 @@ const filteredArticles = computed(() => {
 
 const articlesBySection = computed(() => {
   if (!filteredArticles.value?.length) return {}
+  const SECTION_ORDER = ["Artigo", "Resenha", "Entrevista", "Documento"];
   
   const grouped = {}
-  filteredArticles.value.forEach(article => {
+  filteredArticles.value
+  .sort((a, b) => SECTION_ORDER.indexOf(a.secao) - SECTION_ORDER.indexOf(b.secao))
+  .forEach(article => {
     const secao = $t(`common.sections.${article.secao}`)
     if (!grouped[secao]) {
       grouped[secao] = []

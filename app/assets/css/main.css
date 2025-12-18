@@ -1,15 +1,20 @@
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap');
 
 /* Reset and Base Styles */
 :root {
   --primary-color: #324332;
+  --primary-color-dark: color-mix(in srgb, var(--primary-color), #000 20%);
+  --primary-color-light: color-mix(in srgb, var(--primary-color), #fff 20%);
   --secondary-color: #775679;
-  --secondary-color-dark: #604562;
+  --secondary-color-dark: color-mix(in srgb, var(--secondary-color), #000 20%);
+  --secondary-color-light: color-mix(in srgb, var(--secondary-color), #fff 70%);
   --text-color: #333;
   --background-color: #f9f9f9;
   --font-main: 'Noto Sans', sans-serif;
   --font-sans: 'Noto Sans', sans-serif;
+  --font-serif: 'Alegreya', ui-serif;
 }
 
 * {

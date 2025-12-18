@@ -35,7 +35,7 @@
         >
           {{ autor.nome }}
         </span>
-        <span v-if="autor.instituicao"> ({{ autor.instituicao }})</span>
+        <span v-if="autor.instituicao"> - {{ autor.instituicao }}</span>
         <span v-if="index < article.autores.length - 1">; </span>
       </span>
     </div>

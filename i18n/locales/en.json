@@ -17,7 +17,7 @@
     },
     "home": {
         "featured_edition": "Featured Issue",
-        "view_full_edition": "View Full Issue",
+        "view_full_edition": "View details",
         "translations": "Translations",
         "others": "Others"
     },
@@ -118,6 +118,6 @@
         "error_loading": "Error loading subjects: {message}"
     },
     "dossier": {
-        "default_title": "Dossier"
+        "default_title": "Special Issue"
     }
 }
