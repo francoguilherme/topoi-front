@@ -190,6 +190,7 @@ const formatPeriod = (periodo) => {
 .info h1 {
   font-size: 1rem;
   line-height: 1.4;
+  font-weight: 400;
 }
 
 .info h2 {
