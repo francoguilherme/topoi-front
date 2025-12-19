@@ -41,6 +41,12 @@ h6 {
   color: var(--primary-color);
 }
 
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
 input,
 button,
 select {

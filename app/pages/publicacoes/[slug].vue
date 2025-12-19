@@ -33,11 +33,22 @@
             <span v-if="index < article.autores.length - 1">, </span>
           </span>
         </div>
+
+        <div v-if="article.dossie || article.traducao || article.anotacao" class="more-info">
+          <p v-if="article.dossie && displayDossierTitle">
+            {{ $t('publications.detail.dossier', { dossier: displayDossierTitle }) }}
+          </p>
+          <p v-if="article.traducao">
+            <i class="fa-solid fa-language"></i>
+            {{ $t('publications.detail.translation') }}
+          </p>
+          <p v-if="article.anotacao">{{ article.anotacao }}</p>
+        </div>
       </header>
 
-      <div class="abstract" v-if="article.resumo">
+      <div class="abstract" v-if="displayAbstract">
         <h2>{{ $t('publications.detail.abstract') }}</h2>
-        <BlocksRenderer :content="article.resumo" />
+        <BlocksRenderer :content="displayAbstract" />
       </div>
 
       <div class="keywords" v-if="article.palavras_chave?.length">
@@ -132,6 +143,29 @@ const formattedTitle = computed(() => {
   }
   
   return { main: titleToUse, subtitle: '' }
+})
+
+const displayAbstract = computed(() => {
+  if (locale.value === 'en' && article.value.resumo_en) {
+    return article.value.resumo_en
+  }
+  if (locale.value === 'es' && article.value.resumo_es) {
+    return article.value.resumo_es
+  }
+  return article.value.resumo
+})
+
+const displayDossierTitle = computed(() => {
+  if (article.value.edicao) {
+    if (locale.value === 'en' && article.value.edicao.titulo_en) {
+      return article.value.edicao.titulo_en
+    }
+    if (locale.value === 'es' && article.value.edicao.titulo_es) {
+      return article.value.edicao.titulo_es
+    }
+    return article.value.edicao.titulo
+  }
+  return ''
 })
 
 const formatAuthorName = (name) => {
@@ -294,6 +328,10 @@ const copyCitation = async () => {
 
 .authors a {
   font-weight: bold;
+}
+
+.more-info {
+  margin-top: 1rem;
 }
 
 .abstract {

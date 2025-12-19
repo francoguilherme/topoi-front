@@ -85,7 +85,11 @@ const { data, pending, error } = await useAsyncData(
     }
     
     if (selectedSection.value) {
-      filters.secao = selectedSection.value
+      if (selectedSection.value === 'Tradução') {
+        filters.traducao = true
+      } else {
+        filters.secao = selectedSection.value
+      }      
     }
 
     return find('artigos', {
@@ -148,6 +152,22 @@ watch(() => route.query, (newQuery) => {
 
 .search-bar {
   flex: 1;
+}
+
+.section-filter {
+  position: relative;
+}
+
+.section-filter::after {
+  content: "\f078"; /* Font Awesome chevron-down */
+  font-family: "Font Awesome 7 Free";
+  font-weight: 900;
+  font-size: 0.8rem;
+  position: absolute;
+  right: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 
 .section-filter select {

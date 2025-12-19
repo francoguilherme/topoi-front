@@ -21,7 +21,6 @@
           </p>
           <div v-if="displayTitle" class="edition-title">
             <h2>
-              {{ $t('dossier.default_title') }}:
               {{ displayTitle }}
             </h2>
           </div>
@@ -52,10 +51,19 @@
       <section class="content-tabs">
         <div class="tabs-header">
           <button 
-            :class="{ active: currentTab === 'publications' }" 
-            @click="currentTab = 'publications'"
+            v-if="hasDossier"
+            :class="{ active: currentTab === 'dossier' }" 
+            @click="currentTab = 'dossier'"
           >
-            {{ $t('publications.title') }}
+            {{ $t('home.dossier') }}
+          </button>
+          <button 
+            v-if="hasContinuous"
+            :class="{ active: currentTab === 'continuous' }" 
+            @click="currentTab = 'continuous'"
+          >
+            <span v-if="hasDossier">{{ $t('home.continuous') }}</span>
+            <span v-else>{{ $t('publications.title') }}</span>
           </button>
           <button 
             :class="{ active: currentTab === 'authors' }" 
@@ -65,17 +73,17 @@
           </button>
         </div>
 
-        <div v-if="currentTab === 'publications'" class="tab-content">
-          <div class="search-bar">
-            <SearchInput 
-              v-model="searchInput" 
-              :placeholder="$t('editions.detail.search_placeholder')"
-              @clear="handleClear"
-            />
-          </div>
+        <div class="search-bar" v-if="currentTab === 'dossier' || currentTab === 'continuous'">
+          <SearchInput 
+            v-model="searchInput" 
+            :placeholder="$t('editions.detail.search_placeholder')"
+            @clear="handleClear"
+          />
+        </div>
 
-          <div v-if="filteredArticles?.length">
-            <div v-for="(articles, secao) in articlesBySection" :key="secao" class="section-group">
+        <div v-if="currentTab === 'dossier'" class="tab-content">
+          <div v-if="Object.keys(dossierArticlesBySection || {}).length">
+            <div v-for="(articles, secao) in dossierArticlesBySection" :key="secao" class="section-group">
               <h3 class="section-title">
                 {{ secao }}
               </h3>
@@ -87,8 +95,30 @@
               />
             </div>
           </div>
-          <p v-else-if="searchQuery && !pending">{{ $t('editions.detail.no_results_query', { query: searchQuery }) }}</p>
-          <p v-else-if="!pending">{{ $t('editions.detail.no_results') }}</p>
+          <div v-else class="no-results">
+            <p v-if="searchQuery && !pending">{{ $t('editions.detail.no_results_query', { query: searchQuery }) }}</p>
+            <p v-else-if="!pending">{{ $t('editions.detail.no_results') }}</p>
+          </div>
+        </div>
+
+        <div v-if="currentTab === 'continuous'" class="tab-content">
+          <div v-if="Object.keys(continuousArticlesBySection || {}).length">
+            <div v-for="(articles, secao) in continuousArticlesBySection" :key="secao" class="section-group">
+              <h3 class="section-title">
+                {{ secao }}
+              </h3>
+              <ArticleCard 
+                v-for="article in articles" 
+                :key="article.id" 
+                :article="article"
+                :show-section="false"
+              />
+            </div>
+          </div>
+          <div v-else class="no-results">
+            <p v-if="searchQuery && !pending">{{ $t('editions.detail.no_results_query', { query: searchQuery }) }}</p>
+            <p v-else-if="!pending">{{ $t('editions.detail.no_results') }}</p>
+          </div>
         </div>
 
         <div v-if="currentTab === 'authors'" class="tab-content fade-in">
@@ -211,7 +241,10 @@ const displayTitle = computed(() => {
   return edition.value.titulo
 })
 
-const currentTab = ref(route.query.tab?.toString() || 'publications')
+const hasDossier = computed(() => edition.value?.artigos?.some(a => a.dossie))
+const hasContinuous = computed(() => edition.value?.artigos?.some(a => !a.dossie))
+
+const currentTab = ref(route.query.tab?.toString() || (hasDossier.value ? 'dossier' : hasContinuous.value ? 'continuous' : 'authors'))
 
 watch(currentTab, () => {
   router.push({
@@ -268,15 +301,39 @@ const filteredArticles = computed(() => {
   })
 })
 
-const articlesBySection = computed(() => {
-  if (!filteredArticles.value?.length) return {}
-  const SECTION_ORDER = ["Artigo", "Resenha", "Entrevista", "Documento"];
+const SECTION_ORDER = ["Artigo", "Resenha", "Entrevista", "Documento"];
+
+const dossierArticlesBySection = computed(() => {
+  if (!edition.value?.artigos) return {}
+  
+  const articles = filteredArticles.value.filter(article => article.dossie)
+  if (!articles.length) return {}
   
   const grouped = {}
-  filteredArticles.value
+  articles
   .sort((a, b) => SECTION_ORDER.indexOf(a.secao) - SECTION_ORDER.indexOf(b.secao))
   .forEach(article => {
-    const secao = $t(`common.sections.${article.secao}`)
+    const secao = t(`common.sections.${article.secao}`)
+    if (!grouped[secao]) {
+      grouped[secao] = []
+    }
+    grouped[secao].push(article)
+  })
+  
+  return grouped
+})
+
+const continuousArticlesBySection = computed(() => {
+  if (!edition.value?.artigos) return {}
+  
+  const articles = filteredArticles.value.filter(article => !article.dossie)
+  if (!articles.length) return {}
+  
+  const grouped = {}
+  articles
+  .sort((a, b) => SECTION_ORDER.indexOf(a.secao) - SECTION_ORDER.indexOf(b.secao))
+  .forEach(article => {
+    const secao = t(`common.sections.${article.secao}`)
     if (!grouped[secao]) {
       grouped[secao] = []
     }

@@ -40,13 +40,13 @@
       </span>
     </div>
     <div 
-      v-if="article.resumo" 
+      v-if="displayAbstract" 
       class="summary" 
       :class="{ expanded: isExpanded }"
       @click.prevent.stop="toggleExpand"
     >
       <div class="summary-content">
-        <BlocksRenderer :content="article.resumo" />
+        <BlocksRenderer :content="displayAbstract" />
       </div>
       <span v-if="!isExpanded" class="more-indicator">
         {{ $t('common.more') }} 
@@ -87,6 +87,16 @@ const displayTitle = computed(() => {
     return props.article.titulo_es
   }
   return props.article.titulo
+})
+
+const displayAbstract = computed(() => {
+  if (locale.value === 'en' && props.article.resumo_en) {
+    return props.article.resumo_en
+  }
+  if (locale.value === 'es' && props.article.resumo_es) {
+    return props.article.resumo_es
+  }
+  return props.article.resumo
 })
 
 const toggleExpand = () => {

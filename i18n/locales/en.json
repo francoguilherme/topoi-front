@@ -19,7 +19,9 @@
         "featured_edition": "Featured Issue",
         "view_full_edition": "View details",
         "translations": "Translations",
-        "others": "Others"
+        "others": "Others",
+        "dossier": "Special Issue",
+        "continuous": "Continuous publication"
     },
     "nav": {
         "home": "Home",
@@ -67,6 +69,8 @@
             "loading": "Loading publication...",
             "error_loading": "Error loading publication: {message}",
             "not_found": "Publication not found.",
+            "dossier": "Part of the {dossier}",
+            "translation": "This publication is a translation.",
             "abstract": "Abstract",
             "keywords": "Keywords:",
             "view_pdf": "View PDF",
@@ -97,7 +101,7 @@
     },
     "authors": {
         "title": "Authors",
-        "search_placeholder": "Search by name, institution, email, ORCID...",
+        "search_placeholder": "Search by name, institution, email...",
         "loading": "Loading authors...",
         "error_loading": "Error loading authors: {message}",
         "detail": {
@@ -116,8 +120,5 @@
         "title": "Subjects",
         "loading": "Loading subjects...",
         "error_loading": "Error loading subjects: {message}"
-    },
-    "dossier": {
-        "default_title": "Special Issue"
     }
 }

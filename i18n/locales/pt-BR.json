@@ -19,7 +19,9 @@
         "featured_edition": "Edição em Destaque",
         "view_full_edition": "Ver detalhes",
         "translations": "Traduções",
-        "others": "Outros"
+        "others": "Outros",
+        "dossier": "Dossiê",
+        "continuous": "Fluxo contínuo"
     },
     "nav": {
         "home": "Início",
@@ -67,6 +69,8 @@
             "loading": "Carregando publicação...",
             "error_loading": "Erro ao carregar publicação: {message}",
             "not_found": "Publicação não encontrada.",
+            "dossier": "Parte do {dossier}",
+            "translation": "Esta publicação é uma tradução.",
             "abstract": "Resumo",
             "keywords": "Palavras-chave:",
             "view_pdf": "Ver PDF",
@@ -97,7 +101,7 @@
     },
     "authors": {
         "title": "Autores",
-        "search_placeholder": "Buscar por nome, instituição, email, ORCID...",
+        "search_placeholder": "Buscar por nome, instituição, email...",
         "loading": "Carregando autores...",
         "error_loading": "Erro ao carregar autores: {message}",
         "detail": {
@@ -116,8 +120,5 @@
         "title": "Assuntos",
         "loading": "Carregando assuntos...",
         "error_loading": "Erro ao carregar assuntos: {message}"
-    },
-    "dossier": {
-        "default_title": "Dossiê"
     }
 }

@@ -1,9 +1,7 @@
 <template>
   <div>
     <div class="banner-img">
-      <div>
-        <img src="/topoi.gif" alt="Topoi" />
-      </div>
+      <img src="/topoi.gif" alt="Topoi" />
       <div>
         REVISTA DE HISTÓRIA
         <br>
@@ -15,10 +13,8 @@
       <LoadingSpinner v-if="pending" :text="$t('common.loading')" />
       <div v-else-if="error" class="error">{{ $t('common.error_loading', { message: error.message }) }}</div>
       <div v-else class="content">
-        <!--<h1>{{ data?.data?.displayName || 'Revista Topoi' }}</h1>-->
         <BlocksRenderer v-if="data?.data?.pagina?.conteudo" :content="data.data.pagina.conteudo" />
         
-        <!-- Featured Edition -->
         <section v-if="featuredEdition" class="featured-edition">
           <div class="edition-header">
             <h2>
@@ -32,12 +28,28 @@
           </div>
 
           <h2 v-if="featuredEdition.titulo" class="dossier-title">
-            {{ $t('dossier.default_title') }}:
             {{ getEditionTitle(featuredEdition) }}
           </h2>
 
-          <!-- Articles grouped by section -->
-          <div v-for="(articles, secao) in articlesBySection" :key="secao" class="section-group">
+          <div v-for="(articles, secao) in dossierArticlesBySection" :key="secao" class="section-group">
+            <h4 class="section-title">
+              {{ secao }}
+            </h4>
+            <div class="articles-list">
+              <ArticleCard 
+                v-for="article in articles" 
+                :key="article.id" 
+                :article="article" 
+                :show-section="false"
+              />
+            </div>
+          </div>
+
+          <h2 v-if="hasContinuous" class="dossier-title">
+            {{ $t('home.continuous') }}
+          </h2>
+
+          <div v-for="(articles, secao) in continuousArticlesBySection" :key="secao" class="section-group">
             <h4 class="section-title">
               {{ secao }}
             </h4>
@@ -95,12 +107,33 @@ const getEditionTitle = (edition) => {
   return edition.titulo
 }
 
-const articlesBySection = computed(() => {
-  const articles = featuredEdition.value?.artigos
-  if (!articles?.length) return {}
-  const SECTION_ORDER = ["Artigo", "Resenha", "Entrevista", "Documento"];
+const SECTION_ORDER = ["Artigo", "Resenha", "Entrevista", "Documento"];
 
-  // Group articles by section (secao)
+const hasDossier = computed(() => featuredEdition.value?.artigos?.some(a => a.dossie))
+const hasContinuous = computed(() => featuredEdition.value?.artigos?.some(a => !a.dossie))
+
+const dossierArticlesBySection = computed(() => {
+  const articles = featuredEdition.value?.artigos.filter(article => article.dossie)
+  if (!articles?.length) return {}
+  
+  const grouped = {}
+  articles
+  .sort((a, b) => SECTION_ORDER.indexOf(a.secao) - SECTION_ORDER.indexOf(b.secao))
+  .forEach(article => {
+    const secao = $t(`common.sections.${article.secao}`)
+    if (!grouped[secao]) {
+      grouped[secao] = []
+    }
+    grouped[secao].push(article)
+  })
+  
+  return grouped
+})
+
+const continuousArticlesBySection = computed(() => {
+  const articles = featuredEdition.value?.artigos.filter(article => !article.dossie)
+  if (!articles?.length) return {}
+  
   const grouped = {}
   articles
   .sort((a, b) => SECTION_ORDER.indexOf(a.secao) - SECTION_ORDER.indexOf(b.secao))
@@ -133,14 +166,15 @@ const articlesBySection = computed(() => {
   color: #f5f5f5;
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
 }
+
 .banner-img img {
   height: 100px;
-  width: fit-content;
+  margin: 0 auto
 }
 
 @media (max-width: 840px) {
   .banner-img {
-    height: 130px;
+    height: 140px;
   }
   .banner-img img {
     height: 50px;
@@ -179,11 +213,13 @@ const articlesBySection = computed(() => {
 }
 
 .dossier-title {
+  font-size: 1.6rem;
   margin-bottom: 2rem;
+  font-style: italic;
 }
 
 .section-group {
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .section-title {

@@ -18,7 +18,6 @@
             </div>
             <div class="info">
               <h1 v-if="edition.titulo">
-                {{ $t('dossier.default_title') }}:
                 {{ getEditionTitle(edition) }}
               </h1>
               <h2>
