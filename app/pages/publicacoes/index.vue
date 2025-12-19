@@ -44,6 +44,11 @@
 </template>
 
 <script setup>
+useSeoMeta({
+  title: $t('nav.publications'),
+  description: 'Navegue entre todos os artigos publicados na Topoi.'
+})
+
 const route = useRoute()
 const router = useRouter()
 const page = ref(Number(route.query.page) || 1)

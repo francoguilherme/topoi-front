@@ -10,6 +10,11 @@
 </template>
 
 <script setup>
+useSeoMeta({
+  title: $t('nav.editorial_board'),
+  description: 'Confira o corpo editorial da revista Topoi.'
+})
+
 const { find } = useStrapi()
 const { locale } = useI18n()
 

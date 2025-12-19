@@ -10,6 +10,11 @@
 </template>
 
 <script setup>
+useSeoMeta({
+  title: $t('nav.about'),
+  description: 'Leia mais sobre a revista Topoi.'
+})
+
 const { find } = useStrapi()
 const { locale } = useI18n()
 

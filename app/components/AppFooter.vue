@@ -98,6 +98,7 @@ const localePath = useLocalePath()
   font-weight: bold;
   margin-bottom: 0.5rem;
   color: #fff;
+  font-family: 'Alegreya';
 }
 
 .info .subtitle {

@@ -43,6 +43,11 @@
 </template>
 
 <script setup>
+useSeoMeta({
+  title: $t('nav.editions'),
+  description: 'Navegue entre todas as edições da revista.'
+})
+
 const { find } = useStrapi()
 const { locale } = useI18n()
 const localePath = useLocalePath()

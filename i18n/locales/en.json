@@ -7,6 +7,7 @@
         "more": "more",
         "by": "By:",
         "and": "and",
+        "edition": "Issue",
         "sections": {
             "Artigo": "Articles",
             "Resenha": "Reviews",
@@ -21,7 +22,9 @@
         "translations": "Translations",
         "others": "Others",
         "dossier": "Special Issue",
-        "continuous": "Continuous publication"
+        "continuous": "Continuous publication",
+        "banner_title": "HISTORY JOURNAL",
+        "banner_subtitle": "Post-Graduate Program in Social History at UFRJ"
     },
     "nav": {
         "home": "Home",
@@ -38,7 +41,7 @@
         "editorial_board": "Editorial Board",
         "submission": "Submission",
         "ethics": "Ethics",
-        "contacts": "Contact",
+        "contacts": "Contacts",
         "the_journal": "The Journal"
     },
     "footer": {

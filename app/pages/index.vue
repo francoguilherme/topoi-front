@@ -3,9 +3,9 @@
     <div class="banner-img">
       <img src="/topoi.gif" alt="Topoi" />
       <div>
-        REVISTA DE HISTÓRIA
+        {{ $t('home.banner_title') }}
         <br>
-        Programa de Pós-Graduação em História Social da UFRJ
+        {{ $t('home.banner_subtitle') }}
       </div>
     </div>
 
@@ -31,13 +31,13 @@
             {{ getEditionTitle(featuredEdition) }}
           </h2>
 
-          <div v-for="(articles, secao) in dossierArticlesBySection" :key="secao" class="section-group">
+          <div v-for="group in dossierArticlesBySection" :key="group.secao" class="section-group">
             <h4 class="section-title">
-              {{ secao }}
+              {{ $t(`common.sections.${group.secao}`) }}
             </h4>
             <div class="articles-list">
               <ArticleCard 
-                v-for="article in articles" 
+                v-for="article in group.articles" 
                 :key="article.id" 
                 :article="article" 
                 :show-section="false"
@@ -49,13 +49,13 @@
             {{ $t('home.continuous') }}
           </h2>
 
-          <div v-for="(articles, secao) in continuousArticlesBySection" :key="secao" class="section-group">
+          <div v-for="group in continuousArticlesBySection" :key="group.secao" class="section-group">
             <h4 class="section-title">
-              {{ secao }}
+              {{ $t(`common.sections.${group.secao}`) }}
             </h4>
             <div class="articles-list">
               <ArticleCard 
-                v-for="article in articles" 
+                v-for="article in group.articles" 
                 :key="article.id" 
                 :article="article" 
                 :show-section="false"
@@ -114,38 +114,44 @@ const hasContinuous = computed(() => featuredEdition.value?.artigos?.some(a => !
 
 const dossierArticlesBySection = computed(() => {
   const articles = featuredEdition.value?.artigos.filter(article => article.dossie)
-  if (!articles?.length) return {}
+  if (!articles?.length) return []
   
-  const grouped = {}
+  const groupedMap = {}
   articles
   .sort((a, b) => SECTION_ORDER.indexOf(a.secao) - SECTION_ORDER.indexOf(b.secao))
   .forEach(article => {
-    const secao = $t(`common.sections.${article.secao}`)
-    if (!grouped[secao]) {
-      grouped[secao] = []
+    const secao = article.secao
+    if (!groupedMap[secao]) {
+      groupedMap[secao] = []
     }
-    grouped[secao].push(article)
+    groupedMap[secao].push(article)
   })
   
-  return grouped
+  return Object.entries(groupedMap).map(([secao, articles]) => ({
+    secao,
+    articles
+  })).sort((a, b) => SECTION_ORDER.indexOf(a.secao) - SECTION_ORDER.indexOf(b.secao))
 })
 
 const continuousArticlesBySection = computed(() => {
   const articles = featuredEdition.value?.artigos.filter(article => !article.dossie)
-  if (!articles?.length) return {}
+  if (!articles?.length) return []
   
-  const grouped = {}
+  const groupedMap = {}
   articles
   .sort((a, b) => SECTION_ORDER.indexOf(a.secao) - SECTION_ORDER.indexOf(b.secao))
   .forEach(article => {
-    const secao = $t(`common.sections.${article.secao}`)
-    if (!grouped[secao]) {
-      grouped[secao] = []
+    const secao = article.secao
+    if (!groupedMap[secao]) {
+      groupedMap[secao] = []
     }
-    grouped[secao].push(article)
+    groupedMap[secao].push(article)
   })
   
-  return grouped
+  return Object.entries(groupedMap).map(([secao, articles]) => ({
+    secao,
+    articles
+  })).sort((a, b) => SECTION_ORDER.indexOf(a.secao) - SECTION_ORDER.indexOf(b.secao))
 })
 </script>
 

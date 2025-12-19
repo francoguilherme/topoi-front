@@ -10,6 +10,10 @@
 </template>
 
 <script setup>
+useSeoMeta({
+  title: $t('nav.contacts')
+})
+
 const { find } = useStrapi()
 const { locale } = useI18n()
 

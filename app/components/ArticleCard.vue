@@ -1,7 +1,9 @@
 <template>
-  <NuxtLink :to="localePath(`/publicacoes/${article.slug}`)" class="article-card">
+  <div class="article-card" @click="navigateToArticle">
     <h3>
-      {{ displayTitle }}
+      <NuxtLink :to="localePath(`/publicacoes/${article.slug}`)" @click.stop>
+        {{ displayTitle }}
+      </NuxtLink>
     </h3>
     <div class="meta">
       <span v-if="article.secao && showSection" class="section">{{ $t(`publications.sections.${article.secao}`) }}</span>
@@ -43,20 +45,21 @@
       v-if="displayAbstract" 
       class="summary" 
       :class="{ expanded: isExpanded }"
-      @click.prevent.stop="toggleExpand"
     >
-      <div class="summary-content">
+      <div class="summary-content" ref="contentRef">
         <BlocksRenderer :content="displayAbstract" />
       </div>
-      <span v-if="!isExpanded" class="more-indicator">
+      <span v-show="isClient && !isExpanded && hasOverflow" class="more-indicator" @click.prevent.stop="toggleExpand">
         {{ $t('common.more') }} 
         <i class="fa-solid fa-angle-down"></i>
       </span>
     </div>
-  </NuxtLink>
+  </div>
 </template>
 
 <script setup>
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
+
 const props = defineProps({
   article: {
     type: Object,
@@ -78,6 +81,9 @@ const { locale } = useI18n()
 const localePath = useLocalePath()
 const isExpanded = ref(false)
 const isDownloading = ref(false)
+const isClient = ref(false)
+const hasOverflow = ref(false)
+const contentRef = ref(null)
 
 const displayTitle = computed(() => {
   if (locale.value === 'en' && props.article.titulo_en) {
@@ -103,9 +109,42 @@ const toggleExpand = () => {
   isExpanded.value = !isExpanded.value
 }
 
+const checkOverflow = () => {
+  if (contentRef.value) {
+    hasOverflow.value = contentRef.value.scrollHeight > contentRef.value.clientHeight
+  }
+}
+
+let resizeObserver = null
+
+onMounted(() => {
+  isClient.value = true
+  checkOverflow()
+  if (contentRef.value) {
+    resizeObserver = new ResizeObserver(checkOverflow)
+    resizeObserver.observe(contentRef.value)
+  }
+})
+
+onUnmounted(() => {
+  if (resizeObserver) {
+    resizeObserver.disconnect()
+  }
+})
+
+watch(() => displayAbstract.value, () => {
+  if (isClient.value) {
+    nextTick(checkOverflow)
+  }
+})
+
 const getStrapiMedia = (url) => {
   if (url.startsWith('http')) return url
   return `${config.public.strapi.url}${url}`
+}
+
+const navigateToArticle = () => {
+  router.push(localePath(`/publicacoes/${props.article.slug}`))
 }
 
 const navigateToEdition = () => {
@@ -169,10 +208,20 @@ const formatDate = (dateString) => {
   border-radius: 4px;
   background-color: #fff;
   transition: box-shadow 0.2s;
+  cursor: pointer;
 }
 
 .article-card:hover {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+h3 a {
+  text-decoration: none;
+  color: var(--primary-color);
+}
+
+h3 a:hover {
+  text-decoration: underline;
 }
 
 h3 {
@@ -287,7 +336,7 @@ h3 {
   font-size: 0.85rem;
 }
 
-.summary:hover .summary-content {
-  color: #000;
+.more-indicator:hover {
+  text-decoration: underline;
 }
 </style>

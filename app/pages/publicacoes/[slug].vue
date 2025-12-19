@@ -145,6 +145,11 @@ const formattedTitle = computed(() => {
   return { main: titleToUse, subtitle: '' }
 })
 
+useSeoMeta({
+  title: formattedTitle.value.main?.replace(':', ''),
+  description: `Autores: ${article.value.autores?.map(a => a.nome).join(', ')}.`
+})
+
 const displayAbstract = computed(() => {
   if (locale.value === 'en' && article.value.resumo_en) {
     return article.value.resumo_en

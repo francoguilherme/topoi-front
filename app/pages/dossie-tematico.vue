@@ -10,6 +10,10 @@
 </template>
 
 <script setup>
+useSeoMeta({
+  title: $t('nav.dossier'),
+  description: 'Leia a chamada de artigos para a próxima edição do Dossiê Temático.'
+})
 const { find } = useStrapi()
 const { locale } = useI18n()
 

@@ -10,6 +10,11 @@
 </template>
 
 <script setup>
+useSeoMeta({
+  title: $t('nav.ethics'),
+  description: 'Leia sobre os princípios éticos da revista Topoi.'
+})
+
 const { find } = useStrapi()
 const { locale } = useI18n()
 

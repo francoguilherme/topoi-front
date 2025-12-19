@@ -97,6 +97,11 @@ const author = computed(() => {
   return null
 })
 
+useSeoMeta({
+  title: `${author.value?.nome}`,
+  description: 'Veja todas as publicações deste autor.'
+})
+
 const { data: articlesData, pending: pendingArticles, error: errorArticles } = await useAsyncData(
   `autor-artigos-${route.params.slug}-${locale.value}`,
   () => find('artigos', {

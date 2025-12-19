@@ -7,6 +7,7 @@
         "more": "mais",
         "by": "Por:",
         "and": "e",
+        "edition": "Edição",
         "sections": {
             "Artigo": "Artigos",
             "Resenha": "Resenhas",
@@ -21,7 +22,9 @@
         "translations": "Traduções",
         "others": "Outros",
         "dossier": "Dossiê",
-        "continuous": "Fluxo contínuo"
+        "continuous": "Fluxo contínuo",
+        "banner_title": "REVISTA DE HISTÓRIA",
+        "banner_subtitle": "Programa de Pós-Graduação em História Social da UFRJ"
     },
     "nav": {
         "home": "Início",

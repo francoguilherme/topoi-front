@@ -10,6 +10,10 @@
 </template>
 
 <script setup>
+useSeoMeta({
+  title: $t('nav.announcements')
+})
+
 const { find } = useStrapi()
 const { locale } = useI18n()
 

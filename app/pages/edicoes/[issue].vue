@@ -193,8 +193,14 @@ const handleClear = () => {
   if (searchTimeout.value) clearTimeout(searchTimeout.value)
 }
 
-// Parse the issue parameter (e.g., "25-1" -> volume: 25, numero: 1)
 const [numero, volume] = route.params.issue.split('-').map(Number)
+
+const editionTitle = computed(() => {
+  let title = ""
+  if (numero) title += `nº ${numero} /`
+  if (volume) title += `V. ${volume}`
+  return title
+})
 
 const { data, pending, error } = await useAsyncData(
   `edicao-${route.params.issue}`, 
@@ -239,6 +245,11 @@ const displayTitle = computed(() => {
     return edition.value.titulo_es
   }
   return edition.value.titulo
+})
+
+useSeoMeta({
+  title: `${t('common.edition')} ${editionTitle.value}`,
+  description: displayTitle.value || 'Veja todas as publicações e autores desta edição.'
 })
 
 const hasDossier = computed(() => edition.value?.artigos?.some(a => a.dossie))
@@ -580,6 +591,7 @@ const formatPeriod = (periodo) => {
 @media (max-width: 768px) {
   .tabs-header {
     overflow-x: auto;
+    gap: 0;
   }
 }
 </style>

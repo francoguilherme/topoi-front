@@ -10,6 +10,11 @@
 </template>
 
 <script setup>
+useSeoMeta({
+  title: $t('nav.submission'),
+  description: 'Veja as instruções para submissão de artigos.'
+})
+
 const { find } = useStrapi()
 const { locale } = useI18n()
 

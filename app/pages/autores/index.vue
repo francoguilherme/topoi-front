@@ -61,6 +61,11 @@
 </template>
 
 <script setup>
+useSeoMeta({
+  title: $t('nav.authors'),
+  description: 'Veja todos os autores publicados na revista.'
+})
+
 const route = useRoute()
 const router = useRouter()
 const page = ref(Number(route.query.page) || 1)
