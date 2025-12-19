@@ -259,6 +259,7 @@ h3 {
   -webkit-box-orient: vertical;
   overflow: hidden;
   transition: all 0.3s ease;
+  text-align: justify;
 }
 
 .summary :deep(p) {
