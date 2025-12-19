@@ -45,7 +45,7 @@
             </div>
           </div>
 
-          <h2 v-if="hasContinuous && !hasDossier" class="dossier-title">
+          <h2 v-if="hasContinuous && hasDossier" class="dossier-title">
             {{ $t('home.continuous') }}
           </h2>
 
