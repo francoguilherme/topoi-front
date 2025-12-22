@@ -10,7 +10,27 @@
     </div>
 
     <div class="home-page container">
-      <LoadingSpinner v-if="pending" :text="$t('common.loading')" />
+      <div v-if="pending" class="skeleton-featured-edition">
+        <div class="skeleton-page-content skeleton-loading"></div>
+
+        <div class="edition-header">
+          <div class="skeleton-title skeleton-loading"></div>
+          <div class="skeleton-link skeleton-loading"></div>
+        </div>
+
+        <div class="skeleton-dossier-title skeleton-loading"></div>
+
+        <div class="section-group" v-for="i in 2" :key="i">
+          <div class="skeleton-section-title skeleton-loading"></div>
+          <div class="articles-list">
+             <div class="article-card skeleton-card" v-for="j in 3" :key="j">
+               <div class="skeleton-card-title skeleton-loading"></div>
+               <div class="skeleton-card-meta skeleton-loading"></div>
+               <div class="skeleton-card-abstract skeleton-loading"></div>
+             </div>
+          </div>
+        </div>
+      </div>
       <div v-else-if="error" class="error">{{ $t('common.error_loading', { message: error.message }) }}</div>
       <div v-else class="content">
         <BlocksRenderer v-if="data?.data?.pagina?.conteudo" :content="data.data.pagina.conteudo" />
@@ -74,7 +94,7 @@ const { find } = useStrapi()
 const { locale } = useI18n()
 const localePath = useLocalePath()
 
-const { data, pending, error } = await useAsyncData('home', () => find('home', {
+const { data, pending, error } = await useLazyAsyncData('home', () => find('home', {
   locale: locale.value,
   populate: {
     pagina: {
@@ -240,5 +260,76 @@ const continuousArticlesBySection = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+/* Skeleton Loading Styles */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton-loading {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(to right, #f0f0f0 4%, #e0e0e0 25%, #f0f0f0 36%);
+  background-size: 1000px 100%;
+  border-radius: 4px;
+}
+
+.skeleton-page-content {
+  height: 2.5rem;
+  width: 300px;
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+}
+
+.skeleton-title {
+  height: 2.5rem;
+  width: 250px;
+}
+
+.skeleton-link {
+  height: 1.5rem;
+  width: 100px;
+}
+
+.skeleton-dossier-title {
+  height: 2rem;
+  width: 60%;
+  margin-bottom: 2rem;
+}
+
+.skeleton-section-title {
+  height: 2rem;
+  width: 150px;
+  margin-bottom: 1rem;
+}
+
+.skeleton-card {
+  height: 180px;
+  border: 1px solid #eee;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.skeleton-card-title {
+  height: 1.5rem;
+  width: 80%;
+}
+
+.skeleton-card-meta {
+  height: 1rem;
+  width: 50%;
+}
+
+.skeleton-card-abstract {
+  height: 4rem;
+  width: 100%;
+  flex-grow: 1;
 }
 </style>

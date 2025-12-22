@@ -54,25 +54,27 @@ const renderText = (children) => {
   
   return children.map((child, index) => {
     if (child.type === 'text') {
-      let text = child.text
-      
-      if (child.bold) {
-        return h('strong', { key: index }, text)
+      let content = child.text
+      const tags = []
+
+      if (child.bold) tags.push('strong')
+      if (child.italic) tags.push('em')
+      if (child.underline) tags.push('u')
+      if (child.strikethrough) tags.push('del')
+      if (child.code) tags.push('code')
+
+      if (tags.length === 0) {
+        return content
       }
-      if (child.italic) {
-        return h('em', { key: index }, text)
+
+      // Wrap content in tags, from inside out
+      // We reserve the last tag for the outer wrapper with the key
+      for (let i = 0; i < tags.length - 1; i++) {
+        content = h(tags[i], content)
       }
-      if (child.underline) {
-        return h('u', { key: index }, text)
-      }
-      if (child.strikethrough) {
-        return h('del', { key: index }, text)
-      }
-      if (child.code) {
-        return h('code', { key: index }, text)
-      }
-      
-      return text
+
+      // Return the outermost tag with the key
+      return h(tags[tags.length - 1], { key: index }, content)
     }
     
     if (child.type === 'link') {
