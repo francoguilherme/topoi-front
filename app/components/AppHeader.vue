@@ -107,8 +107,18 @@ const closeLocaleMenu = () => {
   isLocaleMenuOpen.value = false
 }
 
-const toggleAboutMenu = () => {
+const toggleAboutMenu = async () => {
   isAboutMenuOpen.value = !isAboutMenuOpen.value
+  
+  if (isAboutMenuOpen.value) {
+    await nextTick()
+    if (aboutSelectorRef.value) {
+      const dropdownList = aboutSelectorRef.value.querySelector('.dropdown-list')
+      if (dropdownList) {
+        dropdownList.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+      }
+    }
+  }
 }
 
 const closeAboutMenu = () => {
@@ -383,20 +393,22 @@ nav a:hover, nav a.router-link-active {
   nav {
     position: fixed;
     top: 0;
-    right: -100%;
+    transform: translateX(100%);
+    right: 0;
     width: 70%;
     max-width: 300px;
     height: 100vh;
     height: 100dvh;
     background-color: #fff;
     box-shadow: -2px 0 10px rgba(0,0,0,0.1);
-    transition: right 0.3s ease;
+    transition: transform 0.3s ease;
+    will-change: transform;
     padding-top: 5rem;
     overflow-y: auto;
   }
   
   nav.open {
-    right: 0;
+    transform: translateX(0);
   }
   
   nav ul {
