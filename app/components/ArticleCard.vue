@@ -59,6 +59,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
+const { gtag } = useGtag()
 
 const props = defineProps({
   article: {
@@ -178,6 +179,12 @@ const handleDownload = async () => {
     link.click()
     document.body.removeChild(link)
     window.URL.revokeObjectURL(blobUrl)
+
+    gtag('event', 'file_download', {
+      file_name: filename,
+      file_extension: 'pdf',
+      transport_type: 'beacon'
+    })
   } catch (error) {
     console.error('Download failed:', error)
     // Fallback to opening in new tab if fetch fails

@@ -2,9 +2,8 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/strapi', '@nuxtjs/i18n'],
+  modules: ['@nuxtjs/strapi', '@nuxtjs/i18n', 'nuxt-gtag'],
   i18n: {
-    //lazy: true,
     langDir: 'locales',
     locales: [
       { code: 'pt-BR', iso: 'pt-BR', name: 'Português', file: 'pt-BR.json' },
@@ -19,6 +18,13 @@ export default defineNuxtConfig({
     url: process.env.STRAPI_URL || 'http://localhost:1337',
     prefix: '/api',
     version: 'v5'
+  },
+  gtag: {
+    id: process.env.GTAG_ID,
+    enabled: process.env.NODE_ENV === 'production',
+    config: {
+      anonymize_ip: true
+    }
   },
   runtimeConfig: {
     public: {
