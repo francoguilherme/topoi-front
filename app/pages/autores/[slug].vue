@@ -111,7 +111,7 @@ const { data: articlesData, pending: pendingArticles, error: errorArticles } = a
       }
     },
     populate: ['autores', 'edicao', 'arquivo'],
-    sort: ['data_de_publicacao:desc'],
+    sort: ['data_de_publicacao:desc', 'createdAt:desc'],
     pagination: {
       page: page.value,
       pageSize

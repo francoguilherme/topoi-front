@@ -99,7 +99,7 @@ const { data, pending, error } = await useAsyncData(
 
     return find('artigos', {
       populate: ['autores', 'edicao', 'arquivo'],
-      sort: ['edicao.volume:desc', 'edicao.numero:desc'],
+      sort: ['edicao.volume:desc', 'edicao.numero:desc', 'data_de_publicacao:desc', 'createdAt:desc'],
       pagination: {
         page: page.value,
         pageSize

@@ -216,6 +216,7 @@ const { data, pending, error } = await useAsyncData(
         populate: ['arquivo']
       },
       artigos: {
+        sort: ['pagina_inicial:asc', 'data_de_publicacao:asc', 'createdAt:asc'],
         populate: {
           autores: {
             populate: ['foto']

@@ -102,6 +102,7 @@ const { data, pending, error } = await useLazyAsyncData('home', () => find('home
         edicao: {
           populate: {
             artigos: {
+              sort: ['pagina_inicial:asc', 'data_de_publicacao:asc', 'createdAt:asc'],
               populate: ['autores', 'arquivo']
             }
           }
