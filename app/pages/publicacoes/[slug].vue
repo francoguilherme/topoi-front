@@ -202,8 +202,6 @@ const citation = computed(() => {
   } else if (locale.value === 'es' && article.value.titulo_es) {
     title = article.value.titulo_es
   }*/
-  const journal = 'Revista Topoi'
-  const city = 'Rio de Janeiro'
   
   const ed = article.value.edicao
   if (!ed) return ''
@@ -234,7 +232,7 @@ const citation = computed(() => {
   }
   
   // Construct HTML string with bold journal name
-  return `${authors}. ${title}. <strong>${journal}</strong>, ${city}, ${vol}, ${num}${pages}${datePart}.`
+  return `${authors}. ${title}. <i>Topoi (Rio J.)</i>, ${vol}, ${num}${pages}${datePart}.`
 })
 
 const copied = ref(false)
