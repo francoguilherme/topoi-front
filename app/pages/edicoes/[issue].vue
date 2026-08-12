@@ -14,8 +14,9 @@
           <h1>
             <span v-if="edition.numero">nº {{ edition.numero }} /</span>
             V. {{ edition.volume }}
+            <span v-if="editionYear">({{ editionYear }})</span>
           </h1>
-          <p class="period">{{ formatPeriod(edition.periodo) }}</p>
+          <p v-if="formattedPeriod" class="period">{{ formattedPeriod }}</p>
           <p class="date" v-if="edition.data_de_publicacao">
             {{ $t('editions.detail.published_at', { date: new Date(edition.data_de_publicacao).toLocaleDateString(locale === 'en' ? 'en-US' : locale === 'es' ? 'es-ES' : 'pt-BR', {timeZone: 'UTC'}) }) }}
           </p>
@@ -33,7 +34,7 @@
               </div>
             </div>
           </div>
-          
+
           <div v-if="displayTitle" class="edition-title">
             <h2>
               {{ displayTitle }}
@@ -237,6 +238,13 @@ const edition = computed(() => {
   return null
 })
 
+const editionYear = computed(() => {
+  const periodo = edition.value?.periodo
+  if (!periodo) return ''
+  const match = periodo.match(/(\d{4})$/)
+  return match?.[1] ?? ''
+})
+
 const displayTitle = computed(() => {
   if (!edition.value) return ''
   
@@ -368,7 +376,7 @@ const formatPeriod = (periodo) => {
   
   const match = periodo.match(/^([a-zA-ZçÇ]+)\s+-\s+([a-zA-ZçÇ]+)\s+(\d{4})$/i)
   
-  if (!match) return periodo
+  if (!match) return ''
   
   const [, startMonthPt, endMonthPt, year] = match
   
@@ -380,7 +388,7 @@ const formatPeriod = (periodo) => {
   const startIdx = ptMonths[startMonthPt.toLowerCase()]
   const endIdx = ptMonths[endMonthPt.toLowerCase()]
   
-  if (startIdx === undefined || endIdx === undefined) return periodo
+  if (startIdx === undefined || endIdx === undefined) return ''
   
   const getLocMonth = (idx) => {
     const date = new Date(Date.UTC(Number(year), idx, 15))
@@ -392,8 +400,10 @@ const formatPeriod = (periodo) => {
   
   const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1)
   
-  return `${cap(startMonthLoc)} - ${cap(endMonthLoc)} ${year}`
+  return `${cap(startMonthLoc)} - ${cap(endMonthLoc)}`
 }
+
+const formattedPeriod = computed(() => formatPeriod(edition.value?.periodo))
 </script>
 
 <style scoped>
@@ -411,6 +421,7 @@ const formatPeriod = (periodo) => {
 
 .presentation-link {
   margin: 1rem 0;
+  font-size: 1.1rem;
 }
 
 .cover-wrapper {
@@ -425,6 +436,14 @@ const formatPeriod = (periodo) => {
 
 .edition-info {
   flex: 1;
+}
+
+.period {
+  font-size: 1.1rem;
+}
+
+.editorial {
+  font-size: 1.2rem;
 }
 
 .articles-list h2 {

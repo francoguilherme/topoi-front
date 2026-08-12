@@ -95,7 +95,7 @@
             "cover_alt": "Capa da edição",
             "published_at": "Publicado em: {date}",
             "presentation": "Apresentação",
-            "editorial": "Editorial: {title}",
+            "editorial": "Editorial – {title}",
             "publications_in_issue": "Publicações nesta edição",
             "search_placeholder": "Buscar por título, autor, palavra-chave...",
             "no_results_query": "Nenhuma publicação encontrada para \"{query}\".",

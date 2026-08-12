@@ -95,7 +95,7 @@
             "cover_alt": "Issue cover",
             "published_at": "Published at: {date}",
             "presentation": "Presentation",
-            "editorial": "Editorial: {title}",
+            "editorial": "Editorial – {title}",
             "publications_in_issue": "Publications in this issue",
             "search_placeholder": "Search by title, author, keyword...",
             "no_results_query": "No publications found for \"{query}\".",
