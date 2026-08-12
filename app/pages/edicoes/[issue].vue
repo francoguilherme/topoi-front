@@ -19,18 +19,6 @@
           <p class="date" v-if="edition.data_de_publicacao">
             {{ $t('editions.detail.published_at', { date: new Date(edition.data_de_publicacao).toLocaleDateString(locale === 'en' ? 'en-US' : locale === 'es' ? 'es-ES' : 'pt-BR', {timeZone: 'UTC'}) }) }}
           </p>
-          <div v-if="displayTitle" class="edition-title">
-            <h2>
-              {{ displayTitle }}
-            </h2>
-          </div>
-          <p v-if="edition.descricao" class="description">{{ edition.descricao }}</p>
-          
-          <div v-if="edition.apresentacao" class="presentation-link">
-            <a :href="getStrapiMedia(edition.apresentacao.url)" target="_blank" class="btn-download">
-              {{ $t('editions.detail.presentation') }}
-            </a>
-          </div>
 
           <div class="editorial" v-if="edition.editorial">
             <div v-if="edition.editorial.arquivo" class="editorial-file">
@@ -44,6 +32,19 @@
                 <BlocksRenderer :content="edition.editorial.texto" />
               </div>
             </div>
+          </div>
+          
+          <div v-if="displayTitle" class="edition-title">
+            <h2>
+              {{ displayTitle }}
+            </h2>
+          </div>
+          <p v-if="edition.descricao" class="description">{{ edition.descricao }}</p>
+          
+          <div v-if="edition.apresentacao" class="presentation-link">
+            <a :href="getStrapiMedia(edition.apresentacao.url)" target="_blank" class="btn-download">
+              {{ $t('editions.detail.presentation') }}
+            </a>
           </div>
         </div>
       </header>
