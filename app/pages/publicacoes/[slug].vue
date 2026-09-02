@@ -86,6 +86,8 @@
 </template>
 
 <script setup>
+
+
 const route = useRoute()
 const router = useRouter()
 const { find } = useStrapi()
@@ -173,15 +175,6 @@ const displayDossierTitle = computed(() => {
   return ''
 })
 
-const formatAuthorName = (name) => {
-  if (!name) return ''
-  const parts = name.trim().split(' ')
-  if (parts.length === 1) return parts[0].toUpperCase()
-  const lastName = parts.pop().toUpperCase()
-  const firstName = parts.join(' ')
-  return `${lastName}, ${firstName}`
-}
-
 const formatDate = (dateString) => {
   if (!dateString) return ''
   const date = new Date(dateString)
@@ -197,11 +190,6 @@ const citation = computed(() => {
   const authors = article.value.autores?.map(a => formatAuthorName(a.nome)).join('; ') || ''
   
   let title = article.value.titulo
-  /*if (locale.value === 'en' && article.value.titulo_en) {
-    title = article.value.titulo_en
-  } else if (locale.value === 'es' && article.value.titulo_es) {
-    title = article.value.titulo_es
-  }*/
   
   const ed = article.value.edicao
   if (!ed) return ''
