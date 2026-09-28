@@ -15,6 +15,12 @@
   --font-main: 'Noto Sans', sans-serif;
   --font-sans: 'Noto Sans', sans-serif;
   --font-serif: 'Alegreya', ui-serif;
+  /* Sticky AppHeader: logo 60px + 1rem padding top/bottom */
+  --app-header-offset: calc(60px);
+}
+
+html {
+  scroll-padding-top: var(--app-header-offset);
 }
 
 * {
