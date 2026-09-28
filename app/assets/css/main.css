@@ -23,6 +23,13 @@ html {
   scroll-padding-top: var(--app-header-offset);
 }
 
+/* Leitor JATS no mobile: header estático — âncoras não precisam do offset do menu fixo. */
+@media (max-width: 1099px) {
+  html:has(.app-header--reader-mobile) {
+    --app-header-offset: 0.5rem;
+  }
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
