@@ -65,10 +65,17 @@
         </ul>
       </div>
 
-      <div class="download" v-if="article.arquivo">
-        <a :href="getStrapiMedia(article.arquivo.url)" target="_blank" class="btn-download">
+      <div class="download" v-if="article.arquivo || article.xml">
+        <a v-if="article.arquivo" :href="getStrapiMedia(article.arquivo.url)" target="_blank" class="btn-download">
           {{ $t('publications.detail.view_pdf') }}
         </a>
+        <NuxtLink
+          v-if="article.xml"
+          :to="localePath(`/publicacoes/${article.slug}/ler`)"
+          class="btn-read"
+        >
+          {{ $t('publications.detail.read') }} (XML)
+        </NuxtLink>
       </div>
 
       <div class="citation-box" v-if="citation">
@@ -114,7 +121,7 @@ const { data, pending, error } = await useAsyncData(
     filters: {
       slug: route.params.slug
     },
-    populate: ['autores', 'arquivo', 'palavras_chave', 'edicao']
+    populate: ['autores', 'arquivo', 'xml', 'palavras_chave', 'edicao']
   })
 )
 
@@ -402,9 +409,15 @@ const copyCitation = async () => {
   background-color: #ddd;
 }
 
+.download {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.btn-read,
 .btn-download {
   display: inline-block;
-  background-color: var(--secondary-color);
   color: #fff;
   padding: 0.75rem 1.5rem;
   border-radius: 4px;
@@ -412,7 +425,21 @@ const copyCitation = async () => {
   font-weight: bold;
 }
 
+.btn-read {
+  background-color: var(--primary-color);
+}
+
+.btn-read:hover {
+  background-color: var(--primary-color-dark);
+  text-decoration: none;
+}
+
+.btn-download {
+  background-color: var(--secondary-color);
+}
+
 .btn-download:hover {
   background-color: var(--secondary-color-dark);
+  text-decoration: none;
 }
 </style>
