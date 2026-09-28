@@ -1,5 +1,5 @@
 <template>
-  <header class="app-header">
+  <header class="app-header" :class="{ 'app-header--reader-mobile': isXmlReaderPage }">
     <div class="header-content">
       <div class="logo">
         <NuxtLink :to="localePath('/')">
@@ -73,9 +73,13 @@ const aboutSelectorRef = ref(null)
 const navMenuRef = ref(null)
 const hamburgerRef = ref(null)
 
+const route = useRoute()
 const { locale, locales } = useI18n()
 const switchLocalePath = useSwitchLocalePath()
 const localePath = useLocalePath()
+
+/** Leitor JATS (`/publicacoes/:slug/ler`): header não fixo em telas estreitas. */
+const isXmlReaderPage = computed(() => /\/ler\/?$/.test(route.path))
 
 const availableLocales = computed(() => {
   return locales.value
@@ -159,6 +163,12 @@ onMounted(() => {
   position: sticky;
   top: 0;
   z-index: 100;
+}
+
+@media (max-width: 1099px) {
+  .app-header--reader-mobile {
+    position: static;
+  }
 }
 
 .header-content {
