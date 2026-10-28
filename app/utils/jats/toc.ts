@@ -45,6 +45,39 @@ const directChild = (el: Element | null | undefined, tagName: string): Element |
 
 const textOf = (el: Element | null | undefined): string => el?.textContent?.trim() ?? ''
 
+const isFootnoteMarker = (el: Element): boolean => {
+  const tag = el.tagName.toLowerCase()
+  if (tag === 'fn') {
+    return true
+  }
+  return tag === 'xref' && el.getAttribute('ref-type') === 'fn'
+}
+
+/** Section titles may include footnote xrefs; omit those markers from TOC labels. */
+const titleTextForToc = (el: Element | null | undefined): string => {
+  if (!el) {
+    return ''
+  }
+
+  const parts: string[] = []
+  for (const node of Array.from(el.childNodes)) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      parts.push(node.textContent ?? '')
+      continue
+    }
+    if (node.nodeType !== Node.ELEMENT_NODE) {
+      continue
+    }
+    const child = node as Element
+    if (isFootnoteMarker(child)) {
+      continue
+    }
+    parts.push(titleTextForToc(child))
+  }
+
+  return parts.join('').trim()
+}
+
 const walkBodySections = (
   container: Element,
   parentPath: string | null,
@@ -62,7 +95,7 @@ const walkBodySections = (
     secIndex += 1
 
     const titleEl = directChild(child, 'title')
-    const label = titleEl ? textOf(titleEl) : ''
+    const label = titleEl ? titleTextForToc(titleEl) : ''
     if (label) {
       items.push({ id: sectionAnchorId(child, path), label, level })
     }
